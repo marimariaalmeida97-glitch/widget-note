@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuração do Notes Board</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="config-container">
+        <header>
+            <h1>Notes Board</h1>
+            <p>Personalize seu quadro de anotações e copie o link para incorporar no Notion.</p>
+        </header>
+
+        <main class="config-main">
+            <div class="config-options">
+                <h2>Estilo da Folha</h2>
+                <div class="option-group">
+                    <label>Modelo:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="grid" name="sheetStyle" value="grid" checked>
+                        <label for="grid">Quadriculada</label>
+                        <input type="radio" id="lined" name="sheetStyle" value="lined">
+                        <label for="lined">Alinhada</label>
+                        <input type="radio" id="dotted" name="sheetStyle" value="dotted">
+                        <label for="dotted">Pontilhada</label>
+                        <input type="radio" id="blank" name="sheetStyle" value="blank">
+                        <label for="blank">Em branco</label>
+                    </div>
+                </div>
+                <div class="option-group">
+                    <label for="bgColor">Cor do Fundo:</label>
+                    <input type="color" id="bgColor" value="#fcfcfc">
+                </div>
+                <div class="option-group">
+                    <label for="lineColor">Cor da Linha/Ponto:</label>
+                    <input type="color" id="lineColor" value="#e0e0e0">
+                </div>
+            </div>
+
+            <div class="output-section">
+                <h2>Seu Link para o Notion</h2>
+                <p>Copie o link abaixo e use o comando <code>/embed</code> no Notion.</p>
+                <div class="output-url-wrapper">
+                    <input type="text" id="outputUrl" readonly>
+                    <button id="copyButton">Copiar</button>
+                </div>
+                 <h3>Pré-visualização</h3>
+                <iframe id="preview" src=""></iframe>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const options = {
+                sheetStyle: document.querySelector('input[name="sheetStyle"]:checked'),
+                bgColor: document.getElementById('bgColor'),
+                lineColor: document.getElementById('lineColor')
+            };
+
+            const outputUrl = document.getElementById('outputUrl');
+            const preview = document.getElementById('preview');
+            const copyButton = document.getElementById('copyButton');
+
+            function generateUrl() {
+                const baseUrl = window.location.href.replace('index.html', '').replace(/\/$/, '') + '/widget.html';
+                const style = document.querySelector('input[name="sheetStyle"]:checked').value;
+                const bgColor = options.bgColor.value.substring(1); // Remove #
+                const lineColor = options.lineColor.value.substring(1); // Remove #
+                
+                const finalUrl = `${baseUrl}?style=${style}&bgColor=${bgColor}&lineColor=${lineColor}`;
+                
+                outputUrl.value = finalUrl;
+                preview.src = finalUrl;
+            }
+
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('change', generateUrl);
+            });
+
+            copyButton.addEventListener('click', () => {
+                outputUrl.select();
+                document.execCommand('copy');
+                copyButton.textContent = 'Copiado!';
+                setTimeout(() => { copyButton.textContent = 'Copiar'; }, 2000);
+            });
+
+            generateUrl();
+        });
+    </script>
+</body>
+</html>

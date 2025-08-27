@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes Board</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="widget-container">
+        <div class="toolbar">
+            <div class="tool-group">
+                <button id="pen" class="tool-btn active" title="Caneta">✏️</button>
+                <button id="eraser" class="tool-btn" title="Borracha">🧼</button>
+            </div>
+             <div class="tool-group-separator"></div>
+            <div class="tool-group">
+                <button id="line" class="tool-btn" title="Linha">⁄</button>
+                <button id="rect" class="tool-btn" title="Retângulo">□</button>
+                <button id="circle" class="tool-btn" title="Círculo">○</button>
+            </div>
+             <div class="tool-group-separator"></div>
+            <div class="tool-group tool-controls">
+                 <input type="color" id="penColor" title="Cor da Caneta" value="#1a1a1a">
+                 <input type="range" id="penWidth" min="1" max="50" value="3" title="Espessura">
+            </div>
+        </div>
+
+        <canvas id="drawing-board"></canvas>
+        
+        <div class="bottom-bar">
+            <div class="history-controls">
+                <button id="undo" title="Desfazer">↩️</button>
+                <button id="redo" title="Refazer">↪️</button>
+            </div>
+            <div class="action-controls">
+                <button id="clear" title="Limpar Tela">🗑️</button>
+                <button id="save" title="Salvar como PNG">💾 Salvar</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
