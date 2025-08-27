@@ -1,6 +1,6 @@
 window.addEventListener('load', () => {
     const canvas = document.getElementById('drawing-board');
-    if (!canvas) return; // Só executa o código do widget na página certa
+    if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
     const toolbar = document.querySelector('.toolbar');
@@ -10,7 +10,8 @@ window.addEventListener('load', () => {
     let currentTool = 'pen';
     let penColor = '#1a1a1a';
     let penWidth = 3;
-    letstartX, startY;
+    let startX, startY;
+    let snapshot; // Para guardar o estado do canvas antes de desenhar formas
 
     // Histórico para Undo/Redo
     let history = [];
@@ -22,47 +23,49 @@ window.addEventListener('load', () => {
     const bgColor = '#' + (params.get('bgColor') || 'fcfcfc');
     const lineColor = '#' + (params.get('lineColor') || 'e0e0e0');
 
-    document.body.style.backgroundColor = bgColor;
-    canvas.style.backgroundColor = bgColor;
-
     function setCanvasSize() {
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
         drawBackground();
-        redrawCanvas();
+        saveState(); // Salva o estado inicial limpo
     }
 
-    function drawBackground() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = bgColor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    function drawBackground(context = ctx) {
+        context.fillStyle = bgColor;
+        context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 
         if (sheetStyle === 'blank') return;
 
-        ctx.strokeStyle = lineColor;
-        ctx.lineWidth = 1;
+        context.strokeStyle = lineColor;
+        context.lineWidth = 1;
+        context.setLineDash([]); // Garante que as linhas não sejam pontilhadas
         const spacing = 20;
+        
+        context.beginPath(); // Começa um novo caminho para as linhas/pontos
 
-        if (sheetStyle === 'grid' || sheetStyle === 'dotted') {
-            for (let x = 0; x < canvas.width; x += spacing) {
-                for (let y = 0; y < canvas.height; y += spacing) {
-                    if (sheetStyle === 'grid') {
-                        ctx.strokeRect(x, y, spacing, spacing);
-                    } else { // dotted
-                        ctx.beginPath();
-                        ctx.arc(x, y, 1, 0, Math.PI * 2);
-                        ctx.fillStyle = lineColor;
-                        ctx.fill();
-                    }
+        if (sheetStyle === 'grid') {
+            for (let x = spacing; x < context.canvas.width; x += spacing) {
+                context.moveTo(x, 0);
+                context.lineTo(x, context.canvas.height);
+            }
+            for (let y = spacing; y < context.canvas.height; y += spacing) {
+                context.moveTo(0, y);
+                context.lineTo(context.canvas.width, y);
+            }
+            context.stroke();
+        } else if (sheetStyle === 'dotted') {
+            context.fillStyle = lineColor;
+            for (let x = spacing; x < context.canvas.width; x += spacing) {
+                for (let y = spacing; y < context.canvas.height; y += spacing) {
+                    context.fillRect(x - 0.5, y - 0.5, 1, 1);
                 }
             }
         } else if (sheetStyle === 'lined') {
-            for (let y = spacing; y < canvas.height; y += spacing) {
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
+            for (let y = spacing; y < context.canvas.height; y += spacing) {
+                context.moveTo(0, y);
+                context.lineTo(context.canvas.width, y);
             }
+            context.stroke();
         }
     }
     
@@ -75,187 +78,146 @@ window.addEventListener('load', () => {
         };
     };
 
-    const startPosition = (e) => {
+    const startDrawing = (e) => {
         isDrawing = true;
         const { x, y } = getMousePos(e);
         startX = x;
         startY = y;
-        ctx.beginPath();
+        ctx.beginPath(); // Inicia um novo caminho
         ctx.moveTo(x, y);
-        if (currentTool !== 'pen' && currentTool !== 'eraser') {
-            saveState(); // Salva o estado antes de começar a desenhar a forma
-        }
+        // Tira uma "foto" do canvas antes de começar a desenhar formas
+        snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
     };
 
-    const draw = (e) => {
+    const drawing = (e) => {
         if (!isDrawing) return;
         const { x, y } = getMousePos(e);
 
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
-        
+
         if (currentTool === 'pen' || currentTool === 'eraser') {
             ctx.globalCompositeOperation = currentTool === 'eraser' ? 'destination-out' : 'source-over';
-            ctx.strokeStyle = currentTool === 'eraser' ? 'rgba(0,0,0,1)' : penColor;
+            ctx.strokeStyle = penColor;
             ctx.lineWidth = penWidth;
             ctx.lineTo(x, y);
             ctx.stroke();
         } else {
-            // Desenho de formas
-            redrawCanvas(); // Restaura o canvas antes de desenhar a prévia da forma
+            // Restaura a "foto" para desenhar a pré-visualização da forma
+            ctx.putImageData(snapshot, 0, 0);
             ctx.globalCompositeOperation = 'source-over';
             ctx.strokeStyle = penColor;
             ctx.lineWidth = penWidth;
-            
+
+            // Começa um novo caminho para a forma
+            ctx.beginPath();
             switch (currentTool) {
                 case 'line':
-                    ctx.beginPath();
                     ctx.moveTo(startX, startY);
                     ctx.lineTo(x, y);
-                    ctx.stroke();
                     break;
                 case 'rect':
-                    ctx.strokeRect(startX, startY, x - startX, y - startY);
+                    ctx.rect(startX, startY, x - startX, y - startY);
                     break;
                 case 'circle':
                     const radius = Math.sqrt(Math.pow(x - startX, 2) + Math.pow(y - startY, 2));
-                    ctx.beginPath();
-                    ctx.arc(startX, startY, radius, 0, Math.PI * 2);
-                    ctx.stroke();
+                    ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
                     break;
             }
+            ctx.stroke();
         }
     };
 
-    const endPosition = (e) => {
+    const stopDrawing = () => {
         if (!isDrawing) return;
-         if (currentTool === 'pen' || currentTool === 'eraser') {
-            ctx.closePath();
-         } else {
-            draw(e); // Finaliza o desenho da forma
-         }
         isDrawing = false;
+        ctx.closePath();
         saveState();
     };
     
     // --- CONTROLES DA TOOLBAR ---
-    toolbar.addEventListener('click', (e) => {
-        const target = e.target.closest('.tool-btn');
-        if (target) {
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
             document.querySelector('.tool-btn.active').classList.remove('active');
-            target.classList.add('active');
-            currentTool = target.id;
-        }
+            btn.classList.add('active');
+            currentTool = btn.id;
+        });
     });
 
-    const penColorPicker = document.getElementById('penColor');
-    penColorPicker.addEventListener('input', (e) => penColor = e.target.value);
-
-    const penWidthSlider = document.getElementById('penWidth');
-    penWidthSlider.addEventListener('input', (e) => penWidth = e.target.value);
+    document.getElementById('penColor').addEventListener('input', (e) => penColor = e.target.value);
+    document.getElementById('penWidth').addEventListener('input', (e) => penWidth = e.target.value);
     
     // --- AÇÕES (SALVAR, LIMPAR, HISTÓRICO) ---
     const saveButton = document.getElementById('save');
     saveButton.addEventListener('click', () => {
         const link = document.createElement('a');
         link.download = 'notes-board.png';
-        // Salva com o fundo, criando um canvas temporário
+        
+        // Cria um canvas temporário para unir o fundo e o desenho
         const tempCanvas = document.createElement('canvas');
-        const tempCtx = tempCanvas.getContext('2d');
         tempCanvas.width = canvas.width;
         tempCanvas.height = canvas.height;
-        drawBackgroundToContext(tempCtx);
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        // 1. Desenha o fundo (com linhas, pontos, etc.) no canvas temporário
+        drawBackground(tempCtx);
+        // 2. Desenha o canvas principal (com os rabiscos) por cima
         tempCtx.drawImage(canvas, 0, 0);
         
         link.href = tempCanvas.toDataURL('image/png');
         link.click();
     });
 
-    const clearButton = document.getElementById('clear');
-    clearButton.addEventListener('click', () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById('clear').addEventListener('click', () => {
         drawBackground();
         saveState();
     });
 
-    const undoButton = document.getElementById('undo');
-    const redoButton = document.getElementById('redo');
-
     function saveState() {
         if (historyIndex < history.length - 1) {
-            history = history.slice(0, historyIndex + 1);
+            history.splice(historyIndex + 1);
         }
         history.push(canvas.toDataURL());
-        historyIndex++;
+        historyIndex = history.length - 1;
         updateHistoryButtons();
     }
 
-    function redrawCanvas() {
-        if (history.length > 0 && historyIndex >= 0) {
-            const lastImage = new Image();
-            lastImage.src = history[historyIndex];
-            lastImage.onload = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawBackground();
-                ctx.drawImage(lastImage, 0, 0);
-            };
-        } else {
-            drawBackground();
-        }
+    function restoreState(index) {
+        const img = new Image();
+        img.onload = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = history[index];
     }
     
-    function drawBackgroundToContext(context) { // Função auxiliar para salvar com fundo
-        context.fillStyle = bgColor;
-        context.fillRect(0, 0, canvas.width, canvas.height);
-        if (sheetStyle === 'blank') return;
-        // Re-desenha linhas (simplificado)
-    }
-
-    undoButton.addEventListener('click', () => {
+    document.getElementById('undo').addEventListener('click', () => {
         if (historyIndex > 0) {
             historyIndex--;
-            const img = new Image();
-            img.src = history[historyIndex];
-            img.onload = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawBackground();
-                ctx.drawImage(img, 0, 0);
-            };
-        } else if (historyIndex === 0) { // Volta ao estado inicial (em branco)
-             historyIndex--;
-             ctx.clearRect(0, 0, canvas.width, canvas.height);
-             drawBackground();
+            restoreState(historyIndex);
+            updateHistoryButtons();
         }
-        updateHistoryButtons();
     });
 
-    redoButton.addEventListener('click', () => {
+    document.getElementById('redo').addEventListener('click', () => {
         if (historyIndex < history.length - 1) {
             historyIndex++;
-            const img = new Image();
-            img.src = history[historyIndex];
-            img.onload = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawBackground();
-                ctx.drawImage(img, 0, 0);
-            };
+            restoreState(historyIndex);
+            updateHistoryButtons();
         }
-        updateHistoryButtons();
     });
     
     function updateHistoryButtons() {
-        undoButton.disabled = historyIndex <= -1;
-        redoButton.disabled = historyIndex >= history.length - 1;
+        document.getElementById('undo').disabled = historyIndex <= 0;
+        document.getElementById('redo').disabled = historyIndex >= history.length - 1;
     }
 
     // --- INICIALIZAÇÃO ---
-    canvas.addEventListener('mousedown', startPosition);
-    canvas.addEventListener('mouseup', endPosition);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseleave', () => { isDrawing = false; }); // Evita bugs
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', drawing);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', () => { if (isDrawing) stopDrawing(); });
     
     window.addEventListener('resize', setCanvasSize);
-    
     setCanvasSize();
-    saveState(); // Salva o estado inicial
 });
