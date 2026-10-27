@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ateliê de Mundos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Source+Serif+4:wght@400;600&family=Cinzel:wght@500;700&family=Inter:wght@400;600&display=swap">
+<style>
+/* ===== DESIGN SYSTEM: SCRIBE & STRUT MINIMALIST UI ===== */
+:root {
+  --bg: #F6F6F4;
+  --panel: #FFFFFF;
+  --ink: #18181B;
+  --muted: #71717A;
+  --accent: #5E5CE6;
+  --line: #E6E6E3;
+  --bad: #E11D48;
+  --fh: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --fb: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111113;
+    --panel: #1A1A1E;
+    --ink: #F4F4F5;
+    --muted: #A1A1AA;
+    --accent: #7D7AFF;
+    --line: #27272A;
+    --bad: #FB7185;
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.28);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.55);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #111113;
+  --panel: #1A1A1E;
+  --ink: #F4F4F5;
+  --muted: #A1A1AA;
+  --accent: #7D7AFF;
+  --line: #27272A;
+  --bad: #FB7185;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.55);
+  color-scheme: dark;
+}
+
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 90px);
+}
+
+* { box-sizing: border-box; }
+
+body, body :not(h1):not(h2):not(h3):not(.t b) {
+  font-family: var(--fb);
+}
+
+h1, h2, h3, .infobox .t b {
+  font-family: var(--fh) !important;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 14.5px;
+  line-height: 1.65;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--panel);
+  z-index: 40;
+}
+
+/* Typography Hierarchy */
+h1, h2, h3 {
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0.2em 0;
+}
+h2 {
+  font-size: clamp(1.45rem, 2.2vw, 1.85rem);
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+}
+h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0.25rem 0 0.5rem 0;
+}
+.small {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* Top Bar & Glassmorphism Header */
+.top {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 30;
+  background: color-mix(in srgb, var(--panel) 84%, transparent);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+}
+
+header {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0.65rem clamp(1rem, 2.5vw, 2rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1rem;
+}
+
+header h1 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+}
+
+header h1::before {
+  content: "✦";
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--panel);
+  font-size: 13px;
+  box-shadow: var(--shadow-xs);
+}
+
+#pname {
+  margin-right: auto;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.2rem 0.65rem;
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+  border-radius: 999px;
+  color: var(--muted);
+}
+
+#pname:empty { display: none; }
+
+/* Navigation Pill Bar (Scribe / Strut style) */
+nav {
+  display: flex;
+  gap: 0.2rem;
+  padding: 0.22rem;
+  background: color-mix(in srgb, var(--ink) 4%, var(--bg));
+  border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+  border-radius: 11px;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+nav button {
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: transparent;
+  border: 0 !important;
+  border-radius: 8px;
+  color: var(--muted);
+  padding: 0.38rem 0.72rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+nav button:hover {
+  color: var(--ink);
+}
+
+nav button[aria-selected="true"] {
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: var(--shadow-xs);
+}
+
+/* Floating Action Toolbar (Scribe Editor Style) */
+#tb {
+  max-width: 880px;
+  margin: 0.45rem auto;
+  padding: 0.35rem 0.65rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+  justify-content: center;
+}
+
+#tb button, #tb select, #tb input {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  min-width: 32px;
+  height: 30px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid transparent;
+  border-radius: 7px;
+  cursor: pointer;
+  padding: 0 0.5rem;
+  transition: background 0.14s, border-color 0.14s;
+}
+
+#tb button:hover, #tb select:hover {
+  background: var(--bg);
+  border-color: var(--line);
+}
+
+#tb select {
+  background: var(--bg);
+  border-color: var(--line);
+  padding: 0 0.4rem;
+}
+
+#tb input[type="color"] {
+  padding: 2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+}
+
+#tb .sep {
+  width: 1px;
+  height: 18px;
+  background: var(--line);
+  margin: 0 0.25rem;
+}
+
+/* Header Collapse Toggle */
+.top.app-header-collapsed header { display: none; }
+.top.app-header-collapsed { background: transparent; border-bottom: 0; backdrop-filter: none; }
+.header-reveal {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 0.6rem);
+  left: 0.8rem;
+  z-index: 50;
+  padding: 0.38rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}
+.header-reveal:hover { border-color: var(--accent); color: var(--accent); }
+#headerToggle, #bk { font-size: 0.8rem; padding: 0.35rem 0.7rem; border-radius: 8px; white-space: nowrap; }
+
+/* Main Container & Layout */
+main {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(1.2rem, 2.5vw, 2.2rem) clamp(1rem, 2.5vw, 2rem) 5rem;
+}
+
+.row {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.grow {
+  flex: 1;
+  min-width: 280px;
+}
+
+/* Left Workspace Sidebar (Strut & Scribe style) */
+.side {
+  width: 240px;
+  flex: none;
+  padding: 0.6rem;
+  background: color-mix(in srgb, var(--panel) 65%, var(--bg));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  position: sticky;
+  top: calc(env(safe-area-inset-top, 0px) + 74px);
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+.side button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 500;
+  background: transparent;
+  border: 0;
+  border-radius: 9px;
+  padding: 0.52rem 0.75rem;
+  margin: 0.1rem 0;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.side button:hover {
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  color: var(--ink);
+}
+
+.side button[aria-current="true"] {
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: var(--shadow-xs);
+  border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+}
+
+.side select {
+  font-size: 0.84rem;
+  border-radius: 9px;
+  background: var(--panel);
+}
+
+/* Buttons & Inputs */
+.btn {
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  background: var(--ink);
+  color: var(--panel);
+  border: 1px solid transparent;
+  border-radius: 9px;
+  padding: 0.48rem 0.95rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+.btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn.g {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-xs);
+}
+
+.btn.g:hover {
+  background: var(--bg);
+  border-color: color-mix(in srgb, var(--ink) 20%, var(--line));
+}
+
+input[type="text"], input[type="number"], input[type="password"], select, textarea {
+  font: inherit;
+  font-size: 0.9rem;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 0.5rem 0.7rem;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
+  outline: none;
+  background: var(--panel);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+button:focus-visible, [contenteditable]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Cards & Kanban Columns (Strut Board Style) */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.35rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+.proj {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 1rem;
+  margin: 1.1rem 0 1.8rem;
+}
+
+.proj .card {
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+}
+
+.proj .card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+
+.proj .card h3 {
+  font-size: 1.15rem;
+  margin: 0.1rem 0 0.4rem;
+}
+
+/* Badges / Tags (Pill with subtle dot aesthetic) */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel));
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 0.14rem 0.65rem;
+  letter-spacing: 0.01em;
+}
+
+/* Writing Canvas (Scribe Centered Paper Sheet) */
+.ed {
+  min-height: 540px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 5vw, 3.8rem);
+  font-size: 1.05rem;
+  line-height: 1.85;
+  box-shadow: var(--shadow-sm);
+  outline: none;
+}
+
+#v-escrita .grow, main > .row > .grow {
+  max-width: 100%;
+}
+
+/* Title inside Writing Area */
+#ct {
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 1px solid transparent !important;
+  border-radius: 0 !important;
+  padding: 0.2rem 0 !important;
+  font-size: clamp(1.6rem, 3vw, 2.2rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em;
+  box-shadow: none !important;
+  margin-bottom: 0.3rem;
+}
+
+#ct:focus {
+  border-bottom-color: var(--line) !important;
+}
+
+.ed.sm {
+  min-height: 90px;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.05rem;
+  font-size: 0.96rem;
+  line-height: 1.7;
+  box-shadow: none;
+  background: var(--bg);
+}
+
+.ed.sm:focus {
+  background: var(--panel);
+}
+
+.ed img, .infobox img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+}
+
+.ed:empty::before {
+  content: attr(data-ph);
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+/* Draft / Official Segmented Switch */
+.vt {
+  display: inline-flex;
+  gap: 0.2rem;
+  margin: 0.6rem 0 1rem;
+  padding: 0.22rem;
+  background: color-mix(in srgb, var(--ink) 4%, var(--bg));
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.vt button[data-v] {
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.35rem 0.85rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.vt button[data-v][aria-pressed="true"] {
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: var(--shadow-xs);
+}
+
+/* Mentions & Comments */
+.mn {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-bottom: 1px dashed var(--accent);
+  padding: 0.05rem 0.3rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cm {
+  background: color-mix(in srgb, #F59E0B 28%, transparent);
+  border-bottom: 2px solid #F59E0B;
+  padding: 0 2px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* Floating Popovers & Context Menus (Scribe Action Menu Look) */
+#pop, #cmbox, #mmenu {
+  position: fixed;
+  z-index: 60;
+  background: color-mix(in srgb, var(--panel) 96%, transparent);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.9rem;
+  box-shadow: var(--shadow-lg);
+  max-width: 310px;
+  font-size: 0.875rem;
+  display: none;
+}
+
+#mmenu {
+  padding: 0.35rem;
+  max-height: 250px;
+  overflow: auto;
+  min-width: 220px;
+}
+
+#mmenu button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  font-size: 0.85rem;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  color: var(--ink);
+  padding: 0.45rem 0.65rem;
+  cursor: pointer;
+}
+
+#mmenu button:hover {
+  background: var(--bg);
+}
+
+#pop img {
+  width: 100%;
+  max-height: 140px;
+  object-fit: cover;
+  border-radius: 9px;
+  margin-bottom: 0.4rem;
+}
+
+/* Wiki / Ficha Inspector Panel (Scribe Right Panel Style) */
+.infobox {
+  flex: none;
+  width: 310px;
+  max-width: 100%;
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  font-size: 0.86rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.infobox .t {
+  padding: 1rem 1.1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 50%, var(--panel));
+}
+
+.ph {
+  height: 160px;
+  margin: 0.85rem;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.ph:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.fr {
+  display: grid;
+  grid-template-columns: 95px 1fr 24px;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border-top: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
+  align-items: center;
+}
+
+.fr input {
+  width: 100%;
+  min-width: 0;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.84rem;
+  color: var(--ink);
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 6px;
+}
+
+.fr input:hover, .fr input:focus {
+  border-color: var(--line);
+  background: var(--bg);
+}
+
+.fr input[data-k] {
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.fr button {
+  background: none;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  opacity: 0.35;
+  border-radius: 5px;
+}
+
+.fr:hover button { opacity: 1; }
+
+.rr {
+  display: grid;
+  grid-template-columns: 95px 1fr;
+  gap: 0.35rem;
+  padding: 0.5rem 0.85rem;
+  border-top: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
+  font-size: 0.84rem;
+}
+
+.rr b { color: var(--muted); font-weight: 600; }
+
+/* Ficha Sections & Table of Contents */
+.toc {
+  display: inline-block;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1.1rem;
+  font-size: 0.84rem;
+  margin: 0.6rem 0 1rem;
+  box-shadow: var(--shadow-xs);
+}
+
+.toc b {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.toc a {
+  display: block;
+  padding: 0.15rem 0;
+}
+
+a.lnk {
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a.lnk:hover { text-decoration: underline; }
+
+.sec {
+  margin: 1rem 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 0.9rem 1.15rem;
+  box-shadow: var(--shadow-xs);
+}
+
+.sec .h {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sec .h input {
+  font-family: var(--fh);
+  font-size: 1.15rem;
+  font-weight: 600;
+  border: 0;
+  background: transparent;
+  padding: 0.2rem 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.sec .h input:focus {
+  box-shadow: none;
+  border-bottom: 1px solid var(--accent);
+  border-radius: 0;
+}
+
+.sec .h .sec-toggle {
+  white-space: nowrap;
+  font-size: 0.78rem;
+  padding: 0.35rem 0.65rem;
+}
+
+.sec-body {
+  padding-top: 0.65rem;
+  margin-top: 0.55rem;
+  border-top: 1px solid var(--line);
+}
+
+.sec-body[hidden] { display: none !important; }
+
+.sec-body .ed.sm {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.35rem 0.1rem;
+  min-height: 3rem;
+}
+
+[id^="s-"] { scroll-margin-top: 130px; }
+
+/* Appearance Swatches (Scribe Right Panel Theme Cards) */
+.pal {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.85rem;
+}
+
+.pal label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 0.85rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.pal input[type="color"] {
+  width: 100%;
+  height: 40px;
+  padding: 2px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  cursor: pointer;
+}
+
+/* Family Tree Canvas */
+#tw {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  background-image: radial-gradient(color-mix(in srgb, var(--ink) 10%, transparent) 1px, transparent 1px);
+  background-size: 20px 20px;
+  touch-action: none;
+  display: block;
+  box-shadow: var(--shadow-xs);
+}
+
+#tw text {
+  fill: var(--ink);
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: var(--fb);
+  pointer-events: none;
+}
+
+.lk {
+  stroke: var(--muted);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.nd rect {
+  fill: var(--panel);
+  stroke: var(--line);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.06));
+}
+
+.nd.on rect {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
+/* Discrepancy Cards */
+.dc {
+  border-left: 4px solid var(--bad);
+}
+
+.dc.med {
+  border-left-color: #F59E0B;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 0.65rem 0;
+  font-size: 0.88rem;
+}
+
+.pair div {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-sm);
+}
+
+.pair b {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 0.2rem;
+}
+
+/* Maps & Atlas Library */
+.map-library-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.map-library {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 1.1rem;
+}
+
+.map-asset-card { padding: 0; overflow: hidden; }
+
+.map-asset-preview {
+  aspect-ratio: 16 / 9;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+}
+
+.map-asset-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+.map-asset-empty {
+  display: grid;
+  place-items: center;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 1.8rem;
+}
+
+.map-asset-empty span { font-size: 0.8rem; }
+.map-asset-content { padding: 1.1rem 1.25rem; }
+.map-asset-content h3 { margin: 0.45rem 0; }
+.map-asset-content p { font-size: 0.86rem; color: var(--muted); margin: 0.35rem 0; }
+
+.map-asset-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.75rem 0;
+  min-height: 1.5rem;
+}
+
+.map-place-chip {
+  font-size: 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-weight: 500;
+}
+
+.map-asset-actions {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.map-empty-state {
+  text-align: center;
+  grid-column: 1 / -1;
+  padding: 2.5rem;
+}
+
+.map-empty-state > span { font-size: 2.2rem; color: var(--accent); }
+.map-asset-form-wrap { margin: 1.2rem 0; padding: 1.35rem; }
+.map-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+
+.map-asset-form-wrap form > label, .map-form-grid label {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.75rem 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.map-upload-label input { padding: 0.4rem; }
+.map-upload-label .small { font-weight: 400; }
+.map-asset-form-wrap textarea { width: 100%; resize: vertical; }
+
+.map-form-preview {
+  display: block;
+  width: min(100%, 680px);
+  max-height: 380px;
+  object-fit: contain;
+  margin: 0.5rem 0 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+}
+
+.map-geo-field {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 0.8rem 1rem;
+  margin: 1rem 0;
+}
+
+.map-geo-field legend { font-weight: 600; padding: 0 0.35rem; font-size: 0.86rem; }
+
+.map-geo-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 0.5rem;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.map-geo-choice {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 0.55rem !important;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  border-radius: 9px;
+  padding: 0.55rem 0.65rem;
+  margin: 0 !important;
+  font-weight: 400 !important;
+}
+
+.map-geo-choice span { display: grid; }
+.map-geo-choice small { font-size: 0.75rem; color: var(--muted); font-weight: 400; }
+
+.map-coming-soon {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.15rem 1.3rem;
+  margin: 1.5rem 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.map-coming-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+
+.map-coming-soon h3 { margin: 0.3rem 0; }
+.map-coming-soon p { margin: 0.15rem 0; color: var(--muted); font-size: 0.86rem; }
+
+/* Interactive Map Stage & Pins */
+.map-interactive-stage {
+  position: relative;
+  width: 100%;
+  max-height: 72vh;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  margin: 0.8rem 0;
+}
+
+.map-stage-inner { position: relative; display: inline-block; width: 100%; }
+.map-stage-inner img { display: block; width: 100%; height: auto; border-radius: 10px; cursor: crosshair; }
+
+.map-pin-marker {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  cursor: pointer;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.map-pin-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50% 50% 50% 0;
+  background: var(--accent);
+  border: 2px solid #fff;
+  transform: rotate(-45deg);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.28);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 10px;
+}
+
+.map-pin-dot span { transform: rotate(45deg); font-weight: 700; }
+
+.map-pin-label {
+  margin-bottom: 4px;
+  padding: 0.16rem 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--panel) 94%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 0.74rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: var(--shadow-xs);
+}
+
+/* Geography Metadata & Media Tools */
+.geo-meta-panel {
+  margin: 1rem 0 1.2rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-xs);
+}
+
+.geo-meta-heading {
+  display: grid;
+  gap: 0.15rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.geo-meta-heading > b { font-size: 0.92rem; }
+.geo-meta-heading .small { font-size: 0.8rem; }
+
+.geo-meta-panel .geo-place-classifier, .geo-meta-panel .geo-place-parent {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.75fr) minmax(200px, 1.25fr);
+  align-items: center;
+  gap: 0.35rem 1rem;
+  margin: 0.75rem 0 0;
+}
+
+.geo-meta-panel label { display: grid; gap: 0.1rem; }
+.geo-meta-panel label b { font-size: 0.85rem; }
+.geo-meta-panel label .small { font-size: 0.76rem; }
+.geo-meta-panel select { width: 100%; min-width: 0; }
+.ed#ei { margin: 1rem 0 1.2rem; }
+
+.geo-map-option {
+  display: grid;
+  grid-template-columns: auto minmax(120px, 1fr) 64px auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.65rem;
+  margin: 0.4rem 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+}
+
+.geo-map-option input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; }
+.geo-map-option > span:not(.geo-map-no-image) { display: grid; gap: 0.1rem; min-width: 0; }
+.geo-map-option b { font-size: 0.86rem; overflow-wrap: anywhere; }
+.geo-map-option small, .geo-map-no-image { color: var(--muted); font-size: 0.75rem; }
+.geo-map-option img { width: 64px; height: 42px; object-fit: cover; border-radius: 6px; }
+.geo-map-open { font-size: 0.78rem; padding: 0.32rem 0.6rem; }
+
+.geo-map-empty {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.85rem;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.card-media-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0.25rem 0;
+  position: relative;
+}
+
+.card-media-options {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--bg);
+}
+
+.card-media-options[hidden] { display: none; }
+
+.card-media-options button {
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  padding: 0.2rem 0.45rem;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.card-media-options button:hover { background: var(--panel); }
+.card-media-options label { display: flex; align-items: center; gap: 0.3rem; }
+.card-media-options input[type="range"] { width: 85px; }
+
+.card-editable img.editorial-image {
+  max-width: min(100%, 540px);
+  height: auto;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.card-editable img.editorial-image:hover {
+  outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.card-editable img.editorial-image[style*="float"] { max-width: 65%; }
+.card-editable::after { content: ""; display: block; clear: both; }
+
+.geo-fields {
+  margin: 1rem 0;
+  padding: 0.9rem 1rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.geo-fields-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.geo-feature-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.65fr) minmax(0, 1.35fr) 24px;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+}
+
+.geo-feature-row .geo-feature-key { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+.geo-feature-row input { width: 100%; min-width: 0; background: transparent; border: 1px solid transparent; padding: 0.22rem 0.35rem; font-size: 0.83rem; }
+.geo-feature-row input:hover, .geo-feature-row input:focus { background: var(--bg); border-color: var(--line); }
+.geo-feature-row button { border: 0; background: transparent; color: var(--muted); opacity: 0.4; cursor: pointer; }
+.geo-feature-row:hover button { opacity: 1; }
+.geo-add-field { margin-top: 0.5rem; font-size: 0.8rem; }
+
+.geo-map-disclosure {
+  margin: 0.9rem 0;
+  padding: 0.15rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+}
+
+.geo-map-disclosure summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  list-style: none;
+}
+
+.geo-map-disclosure summary::-webkit-details-marker { display: none; }
+.geo-map-disclosure summary::before { content: '＋'; color: var(--accent); font-size: 0.95rem; }
+.geo-map-disclosure[open] summary::before { content: '−'; }
+.geo-map-disclosure summary .small { font-weight: 400; margin-left: auto; }
+.geo-map-disclosure-body { padding: 0.25rem 0 0.7rem; border-top: 1px solid var(--line); }
+.geo-add-map { font-size: 0.8rem; margin-top: 0.4rem; }
+
+.infobox .geo-fields { margin: 0; padding: 0.65rem 0.8rem; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: transparent; box-shadow: none; }
+.infobox .geo-fields-heading { display: grid; gap: 0.1rem; padding-bottom: 0.4rem; }
+.infobox .geo-fields-heading b { font-size: 0.84rem; }
+.infobox .geo-fields-heading .small { font-size: 0.74rem; }
+
+.card-image-header-btn {
+  flex: none;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  padding: 0.32rem 0.55rem;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.card-image-header-btn:hover {
+  color: var(--accent);
+  background: var(--bg);
+  border-color: var(--line);
+}
+
+/* Reading Mode */
+.reading-controls { display: flex; justify-content: flex-end; margin: 0 0 0.5rem; }
+.reading-controls .btn { font-size: 0.78rem; padding: 0.34rem 0.68rem; }
+.ficha-title { margin: 0.15rem 0 0.35rem; font-size: 2rem; }
+.ficha-category { display: inline-block; margin: 0 0 0.75rem; }
+.read-section { margin: 1.35rem 0; background: var(--panel); padding: 1.25rem 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--line); }
+.read-section h3 { margin-bottom: 0.5rem; }
+.read-content { line-height: 1.8; }
+.read-content img { max-width: 100%; height: auto; border-radius: 8px; }
+
+.ficha-read-mode .sec .h button, .ficha-read-mode #as, .ficha-read-mode #af, .ficha-read-mode #de,
+.ficha-read-mode .geo-add-field, .ficha-read-mode .card-image-header-btn, .ficha-read-mode .card-media-tools,
+.ficha-read-mode .geo-add-map, .ficha-read-mode .geo-map-option input, .ficha-read-mode .geo-feature-row button,
+.ficha-read-mode .toc { display: none !important; }
+
+.ficha-read-mode .ficha-intro { background: transparent; border: 0; box-shadow: none; padding: 0.25rem 0; min-height: 0; line-height: 1.8; }
+.ficha-read-mode .infobox input { border: 0; background: transparent; }
+.chapter-read-mode #ct { border: 0; background: transparent; padding: 0; font-size: 2rem; font-weight: 700; }
+.chapter-read-mode .vt, .chapter-read-mode #wc, .chapter-read-mode #cms { display: none; }
+.chapter-content.chapter-reading { min-height: 0; border: 1px solid var(--line); background: var(--panel); padding: clamp(1.5rem, 4vw, 3rem); line-height: 1.9; }
+
+[hidden] { display: none !important; }
+
+/* Responsive Adjustments */
+@media (max-width: 760px) {
+  header { align-items: flex-start; }
+  header h1 { width: 100%; }
+  nav { order: 5; width: 100%; overflow-x: auto; }
+  main { padding-top: 1rem; }
+  .row { gap: 1rem; }
+  .side {
+    width: 100%;
+    position: static;
+    max-height: none;
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 0.25rem;
+  }
+  .side button { width: auto; flex: none; margin: 0; }
+  .ed { min-height: 55vh; padding: 1.25rem; }
+  .infobox { width: 100%; }
+  .pair, .map-form-grid, .geo-meta-panel .geo-place-classifier, .geo-meta-panel .geo-place-parent {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<div class="top">
+<header><h1 id="home">Ateliê de Mundos</h1><span class="small" id="pname"></span><button class="btn g" id="bk" style="padding:.3rem .7rem">Backup</button><button class="btn g" id="headerToggle" type="button" title="Ocultar cabeçalho" aria-label="Ocultar cabeçalho" aria-expanded="true">Ocultar barra</button><nav id="tabs"></nav></header><button id="headerReveal" class="header-reveal" type="button" title="Mostrar cabeçalho" aria-label="Mostrar cabeçalho" hidden>☰ Mostrar barra</button>
+<div id="tb" hidden>
+<button data-c="bold" title="Negrito"><b>N</b></button><button data-c="italic" title="Itálico"><i>I</i></button><button data-c="underline" title="Sublinhado"><u>S</u></button>
+<select id="blk" aria-label="Estilo do bloco"><option value="p">Texto</option><option value="h2">Título</option><option value="h3">Subtítulo</option><option value="blockquote">Citação</option></select>
+<input type="color" id="col" value="#2f6b5e" aria-label="Cor do texto">
+<span class="sep"></span>
+<button data-c="justifyLeft" title="Esquerda">&#8676;</button><button data-c="justifyCenter" title="Centro">&#8596;</button><button data-c="justifyRight" title="Direita">&#8677;</button>
+<span class="sep"></span>
+<button id="bLink">Link</button><button id="bImg">Imagem</button><button id="bCm">Comentar</button><button id="bMn">@ Mencionar</button>
+<input type="file" id="fimg" accept="image/*" hidden>
+</div>
+</div>
+<main id="m"></main>
+<div id="pop"></div>
+<div id="cmbox"></div>
+<div id="mmenu"></div>
+<script>
+const $=s=>document.querySelector(s),root=document.documentElement,uid=()=>Math.random().toString(36).slice(2,8);let headerHidden=false;try{headerHidden=localStorage.getItem('atelier-header-hidden')==='1'}catch(e){}
+function setHeaderHidden(hidden){headerHidden=!!hidden;document.querySelector('.top').classList.toggle('app-header-collapsed',headerHidden);$('#headerReveal').hidden=!headerHidden;$('#headerToggle').setAttribute('aria-expanded',String(!headerHidden));try{localStorage.setItem('atelier-header-hidden',headerHidden?'1':'0')}catch(e){}}
+$('#headerToggle').onclick=()=>setHeaderHidden(true);$('#headerReveal').onclick=()=>setHeaderHidden(false);setHeaderHidden(headerHidden);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const CATS={Personagens:['Título','Nascimento','Casa','Olhos'],Geografia:['Tipo','Região','Clima','População'],Política:['Regime','Líder','Capital'],Religiões:['Divindades','Símbolo','Sede'],Idiomas:['Família','Falantes','Escrita'],Cultura:['Povo','Tradição','Época'],Mapas:['Escala','Região'],Outros:[]};
+const SECS={Personagens:['Aparência','História','Citações'],Mapas:['Descrição'],Outros:['Descrição']};
+const GEO_TYPES={solar_system:'Sistema solar',star:'Estrela',planet:'Planeta ou mundo',moon:'Lua ou satélite',continent:'Continente',region:'Região',country:'País ou reino',city:'Cidade ou assentamento',site:'Local específico',other:'Outro tipo de lugar'};
+const MAP_TYPES={regiao:'Região ou localidade',planeta:'Planeta ou mundo',sistema:'Sistema solar',outro:'Outro tipo de mapa'};
+function seed(){const a=uid(),b=uid(),c=uid();return{ps:[{id:uid(),name:'Crônicas de Valdor',mode:'construção',cm:{},
+ch:[{id:uid(),t:'A chegada',draft:'<p>Rascunho: Lyra volta para casa e encontra o portão fechado…</p>',final:`<p><span class="mn" data-e="${a}" contenteditable="false">Lyra</span> atravessou o portão de <span class="mn" data-e="${b}" contenteditable="false">Valdor</span> ao amanhecer. Passe o mouse ou toque nos nomes destacados para ver a ficha sem sair do capítulo.</p>`}],
+es:[{id:a,cat:'Personagens',name:'Lyra Valdor',img:'',f:[['Título','Herdeira'],['Nascimento','82 DA'],['Casa','Valdor'],['Olhos','Verdes']],s:[{h:'Aparência',b:'<p>Cabelo ruivo, postura reta.</p>'},{h:'História',b:''},{h:'Citações',b:'<blockquote>Não herdei um trono. Herdei uma dívida.</blockquote>'}]},
+{id:b,cat:'Geografia',name:'Valdor',img:'',f:[['Tipo','Fortaleza'],['Região','Vale do Norte'],['Clima','Frio e úmido'],['População','~3.000']],s:[{h:'Descrição',b:'<p>Fortaleza de pedra cinza sobre o vale.</p>'},{h:'História',b:''}]},
+{id:c,cat:'Religiões',name:'Fé das Três Luas',img:'',f:[['Divindades','Três irmãs-luas'],['Símbolo','Círculo triplo'],['Sede','Templo de Ashvane']],s:[{h:'Descrição',b:'<p>Culto lunar dominante no vale.</p>'},{h:'História',b:''}]}]}]}}
+let S;try{S=JSON.parse(localStorage.getItem('ateliê-v2'))}catch(e){}S=S||seed();
+let pid=null,tab='escrita',cid=null,eid=null,cat='Todas',ver='final',last=null,rng=null,t0,mapId=null,mapAssetId=null,activeCardImage=null;const readingMode={fichas:false,escrita:false};
+const secOpen={};
+const P=()=>S.ps.find(p=>p.id===pid);
+function save(){clearTimeout(t0);t0=setTimeout(()=>{try{localStorage.setItem('ateliê-v2',JSON.stringify(S))}catch(e){alert('O armazenamento do navegador encheu. Use imagens menores ou remova algumas.')}},400)}
+const words=h=>{const d=document.createElement('div');d.innerHTML=h;return(d.textContent.trim().match(/\S+/g)||[]).length};
+
+function nav(){const on=!!pid;$('#tabs').innerHTML=on?[['resumo','Resumo'],['plano','Planejamento'],['escrita','Escrita'],['fichas','Fichas'],['mapas','Mapas'],['arvore','Árvore'],['linha','Linha do tempo'],['verif','Discrepâncias']].map(([k,l])=>`<button aria-selected="${tab===k}" data-t="${k}">${l}</button>`).join('')+`<button aria-selected="${tab==='look'}" data-t="look">Aparência</button>`:`<button aria-selected="${tab==='look'}" data-t="look">Aparência</button>`;
+$('#pname').textContent=on?P().name+' · modo '+P().mode:'';$('#tb').hidden=!(on&&tab==='escrita'&&!readingMode.escrita)}
+function render(){nav();if(tab==='look')return look();if(!pid)return home();tab==='verif'?verif():tab==='plano'?plano():tab==='linha'?linha():tab==='resumo'?resumo():tab==='fichas'?fichas():tab==='mapas'?mapas():tab==='arvore'?arvore():escrita()}
+$('#tabs').onclick=e=>{if(e.target.dataset.t){tab=e.target.dataset.t;render()}};
+$('#home').onclick=()=>{pid=null;tab='escrita';render()};
+
+function home(){$('#m').innerHTML=`<h2>Seus projetos</h2><p class="small">Cada projeto tem seus próprios capítulos, fichas e menções.</p><div class="proj">${S.ps.map(p=>`<div class="card" tabindex="0" role="button" data-o="${p.id}"><h3>${esc(p.name)}</h3><span class="tag">${p.mode}</span><p class="small">${p.ch.length} capítulos · ${p.es.length} fichas</p></div>`).join('')}</div>
+<div class="card" style="max-width:520px"><h3>Novo projeto</h3><p><input type="text" id="pn" placeholder="Nome da história" style="width:100%"></p><p><select id="pm"><option value="construção">Modo construção de história</option><option value="fanfic">Modo fanfic</option></select></p><p class="small">No modo fanfic, cada ficha ganha uma seção “O que mudei do canon”.</p><button class="btn" id="pc">Criar projeto</button></div>`;
+$('#pc').onclick=()=>{const n=$('#pn').value.trim();if(!n)return $('#pn').focus();const p={id:uid(),name:n,mode:$('#pm').value,cm:{},ch:[{id:uid(),t:'Capítulo 1',draft:'',final:''}],es:[]};S.ps.push(p);pid=p.id;cid=p.ch[0].id;save();render()};
+$('#m').onclick=e=>{const c=e.target.closest('[data-o]');if(c){pid=c.dataset.o;cid=P().ch[0]?.id;eid=null;tab='escrita';render()}}}
+
+function bindEd(el,get,set){el.oninput=ev=>{set(el.innerHTML);save();if(ev.data==='@'){document.execCommand('delete');menu(el)}stats()};el.onfocus=()=>last=el}
+function escrita(){const p=P(),c=p.ch.find(x=>x.id===cid)||p.ch[0];cid=c.id;
+$('#m').innerHTML=`<div class="row"><div class="side" id="cl">${p.ch.map((x,i)=>`<button data-i="${x.id}" ${x.id===cid?'aria-current="true"':''}>${i+1}. ${esc(x.t)}</button>`).join('')}<button id="addc" style="color:var(--accent)">Novo capítulo</button></div>
+<div class="grow"><div class="reading-controls"><button class="btn g" id="toggleChapterRead" aria-pressed="${readingMode.escrita}">${readingMode.escrita?'Voltar à edição':'Modo de leitura'}</button></div><input type="text" id="ct" value="${esc(c.t)}" aria-label="Título do capítulo" style="width:100%;font-family:var(--fh);font-size:1.6rem">
+<div class="vt"><button data-v="draft" aria-pressed="${ver==='draft'}">Rascunho</button><button data-v="final" aria-pressed="${ver==='final'}">Capítulo oficial</button>${ver==='draft'?'<button class="btn" id="prom" style="margin-left:auto">Transformar em capítulo oficial</button>':''}</div>
+<div class="ed chapter-content ${readingMode.escrita?'chapter-reading':''}" id="ed" contenteditable="${!readingMode.escrita}" data-ph="${ver==='draft'?'Rascunhe à vontade. Nada aqui é checado.':'Escreva o capítulo. Use @ para mencionar personagens, lugares e mais.'}">${c[ver]}</div>
+<p class="small" id="wc"></p><div id="cms"></div></div></div>`;
+$('#m').classList.toggle('chapter-read-mode',readingMode.escrita);if(readingMode.escrita)$('#ct').readOnly=true;const ed=$('#ed');bindEd(ed,0,h=>c[ver]=h);stats();$('#toggleChapterRead').onclick=()=>{readingMode.escrita=!readingMode.escrita;render()};
+$('#ct').oninput=e=>{c.t=e.target.value;save()};$('#ct').onchange=escrita;
+$('#cl').onclick=e=>{if(e.target.dataset.i){cid=e.target.dataset.i;escrita()}if(e.target.id==='addc'){const n={id:uid(),t:'Novo capítulo',draft:'',final:''};p.ch.push(n);cid=n.id;save();escrita()}};
+document.querySelector('.vt').onclick=e=>{if(e.target.dataset.v){ver=e.target.dataset.v;escrita()}if(e.target.id==='prom'){if(c.final&&!confirm('O capítulo oficial já tem texto. Adicionar o rascunho no final dele?'))return;c.final+=c.draft;c.draft='';ver='final';save();escrita()}}}
+function stats(){const p=P();if(!p||tab!=='escrita')return;const ed=$('#ed');if(!ed)return;$('#wc').textContent=ver==='draft'?`Rascunho: ${words(ed.innerHTML)} palavras`:`Capítulo: ${words(ed.innerHTML)} palavras`;
+$('#cms').innerHTML=[...ed.querySelectorAll('.cm')].map(s=>`<div class="card small" style="margin:.4rem 0"><b>“${esc(s.textContent.slice(0,50))}”</b>: ${esc(p.cm[s.dataset.k]||'')}</div>`).join('')}
+
+function fichas(){const p=P();const list=p.es.filter(x=>cat==='Todas'||x.cat===cat);const e=p.es.find(x=>x.id===eid);
+$('#m').innerHTML=`<div class="row"><div class="side"><select id="cs" aria-label="Categoria" style="width:100%;margin-bottom:.4rem">${['Todas',...Object.keys(CATS)].map(k=>`<option ${k===cat?'selected':''}>${k}</option>`).join('')}</select>${list.map(x=>`<button data-e="${x.id}" ${x.id===eid?'aria-current="true"':''}>${esc(x.name)}<br><span class="small">${x.cat}</span></button>`).join('')}<button id="adde" style="color:var(--accent)">Nova ficha${cat!=='Todas'?' em '+cat:''}</button></div><div class="grow" id="pg">${e?'':'<p class="small">Escolha uma ficha ou crie uma nova. Fichas servem para personagens, lugares, política, religiões, idiomas, cultura e mapas.</p>'}</div></div>`;
+$('#cs').onchange=ev=>{cat=ev.target.value;fichas()};
+$('.side').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;if(b.dataset.e){eid=b.dataset.e;fichas()}if(b.id==='adde'){const k=cat==='Todas'?'Personagens':cat;const n={id:uid(),cat:k,name:'Nova ficha',img:'',f:CATS[k].map(x=>[x,'']),s:(SECS[k]||['Descrição','História']).map(h=>({h,b:''}))};if(k==='Geografia')n.placeType='site';if(p.mode==='fanfic')n.s.push({h:'O que mudei do canon',b:''});p.es.push(n);eid=n.id;save();fichas()}};
+if(e)ficha(e)}
+function rel(e){const p=P(),R={Cônjuge:[],Pais:[],Filhos:[],Irmãos:[]};(p.trees||[]).forEach(t=>{const n=t.n.find(x=>x.e===e.id);if(!n)return;const nm=id=>{const m=t.n.find(x=>x.id===id),f=m&&m.e&&p.es.find(y=>y.id===m.e);return f?`<a class="lnk" data-go="${f.id}">${esc(m.name)}</a>`:esc(m?m.name:'')};
+t.l.forEach(l=>{const o=l.a===n.id?l.b:l.b===n.id?l.a:null;if(!o)return;if(l.t==='c')R.Cônjuge.push(nm(o));if(l.t==='i')R.Irmãos.push(nm(o));if(l.t==='p')(l.a===n.id?R.Filhos:R.Pais).push(nm(o))})});return Object.entries(R).filter(x=>x[1].length)}
+function wouldGeoCycle(id,parentId,p){let cur=parentId,seen=new Set();while(cur){if(cur===id||seen.has(cur))return true;seen.add(cur);const x=p.es.find(q=>q.id===cur);cur=x&&x.parentGeoId}return false}
+function cascadeGeoMap(p,parentId,mapId,enabled){const map=(p.mapLibrary||[]).find(x=>x.id===mapId);if(!map)return;map.geoIds=map.geoIds||[];const queue=p.es.filter(x=>x.cat==='Geografia'&&x.parentGeoId===parentId),seen=new Set();while(queue.length){const child=queue.shift();if(seen.has(child.id))continue;seen.add(child.id);if(enabled&&!map.geoIds.includes(child.id))map.geoIds.push(child.id);if(!enabled)map.geoIds=map.geoIds.filter(id=>id!==child.id);queue.push(...p.es.filter(x=>x.cat==='Geografia'&&x.parentGeoId===child.id))}}
+function ficha(e){const p=P(),ap=p.ch.map((c,i)=>[i,c]).filter(([i,c])=>(c.final+c.draft).includes(`data-e="${e.id}"`)),rl=rel(e),mapLibrary=p.mapLibrary||[],geography=p.es.filter(x=>x.cat==='Geografia'),mapRefs=mapLibrary.filter(m=>(m.geoIds||[]).includes(e.id));if(e.cat==='Geografia'){e.placeType=e.placeType||'site';const oldLabels=CATS.Personagens,geoLabels=CATS.Geografia;e.f.forEach((r,i)=>{if(oldLabels.includes(r[0])&&geoLabels[i])r[0]=geoLabels[i]})}
+const placeTypeHTML=e.cat==='Geografia'?'<div class="geo-place-classifier"><label for="geoPlaceType"><b>Tipo de lugar</b><span class="small">Classifique para organizar o universo e os mapas.</span></label><select id="geoPlaceType">'+Object.entries(GEO_TYPES).map(([k,v])=>'<option value="'+k+'" '+(k===(e.placeType||'site')?'selected':'')+'>'+esc(v)+'</option>').join('')+'</select></div>':'';
+const geoParentHTML=e.cat==='Geografia'?'<div class="geo-place-parent"><label for="geoParent"><b>Faz parte de</b><span class="small">Opcional · região dentro de um planeta, cidade dentro de um reino etc.</span></label><select id="geoParent"><option value="">Sem lugar superior</option>'+geography.filter(x=>x.id!==e.id&&!wouldGeoCycle(e.id,x.id,p)).map(x=>'<option value="'+esc(x.id)+'" '+(e.parentGeoId===x.id?'selected':'')+'>'+esc(x.name)+' · '+esc(GEO_TYPES[x.placeType]||'Lugar')+'</option>').join('')+'</select></div>':'';
+const geoMetaHTML=e.cat==='Geografia'?'<section class="geo-meta-panel"><div class="geo-meta-heading"><b>Organização geográfica</b><span class="small">Classificação e posição deste lugar no seu universo.</span></div>'+placeTypeHTML+geoParentHTML+'</section>':'';
+const geoFieldsHTML=e.cat==='Geografia'?'<section class="geo-fields"><div class="geo-fields-heading"><b>Características do lugar</b><span class="small">Tipo, região, clima e outros dados geográficos.</span></div><div id="fr">'+e.f.map((r,i)=>'<div class="geo-feature-row"><input class="geo-feature-key" data-k="'+i+'" value="'+esc(r[0]||'Campo')+'" aria-label="Nome da característica"><input id="geof-'+i+'" data-v="'+i+'" value="'+esc(r[1])+'" aria-label="'+esc(r[0]||'Característica geográfica')+'"><button type="button" data-d="'+i+'" title="Remover característica">×</button></div>').join('')+'</div><button class="btn g geo-add-field" id="af">＋ Adicionar característica</button></section>':'';const sideFieldsHTML=e.cat==='Geografia'?'':'<div id="fr">'+e.f.map((r,i)=>`<div class="fr"><input data-k="${i}" value="${esc(r[0])}" aria-label="Campo"><input data-v="${i}" value="${esc(r[1])}" aria-label="Valor"><button data-d="${i}" title="Remover campo">×</button></div>`).join('')+'</div>';
+const geoOptions=mapLibrary.map(m=>'<div class="geo-map-option"><input type="checkbox" data-map-id="'+esc(m.id)+'" '+((m.geoIds||[]).includes(e.id)?'checked':'')+'><span><b>'+esc(m.name)+'</b><small>'+esc(MAP_TYPES[m.kind]||'Mapa')+'</small></span>'+(m.image?'<img src="'+m.image+'" alt="">':'<span class="geo-map-no-image">Sem imagem</span>')+'<button type="button" class="btn g geo-map-open" data-mapasset-go="'+esc(m.id)+'">Abrir</button></div>').join('');
+const geoLinkHTML=e.cat==='Geografia'?'<details class="geo-map-disclosure"><summary>Mapas vinculados <span class="small">'+(mapRefs.length?mapRefs.length+' associado(s)':'Opcional')+'</span></summary><div class="geo-map-disclosure-body"><p class="small">Selecione os mapas em que este lugar aparece.</p><div id="geoMapLinks">'+(mapLibrary.length?geoOptions:'<div class="geo-map-empty">Nenhum mapa cadastrado.</div>')+'</div><button type="button" class="btn g geo-add-map" data-open-map-library>＋ Adicionar ou gerenciar mapas</button></div></details>':'';
+const mapRefHTML=mapRefs.length?'<div class="rr"><b>Mapas</b><span>'+mapRefs.map(m=>esc(MAP_TYPES[m.kind]||'Mapa')+': '+esc(m.name)+' <button type="button" class="btn g" data-mapasset-go="'+esc(m.id)+'">Abrir</button>').join('<br>')+'</span></div>':'';
+$('#pg').innerHTML=`<div class="reading-controls ficha-reading-controls"><button class="btn g" id="toggleFichaRead" aria-pressed="${readingMode.fichas}">${readingMode.fichas?'Voltar à edição':'Modo de leitura'}</button></div><div class="row"><div class="grow" style="min-width:300px">
+${readingMode.fichas?`<h1 class="ficha-title">${esc(e.name)}</h1><span class="tag ficha-category">${esc(e.cat)}</span>`:`<input type="text" id="en" value="${esc(e.name)}" aria-label="Nome" style="font-family:var(--fh);font-size:2rem;width:100%;border:0;background:none;border-bottom:1px solid var(--line)"><select id="ec" aria-label="Categoria da ficha" style="margin:.5rem 0">${Object.keys(CATS).map(k=>`<option ${k===e.cat?'selected':''}>${k}</option>`).join('')}</select>`}
+${geoMetaHTML}
+<div class="ed sm ficha-intro" id="ei" contenteditable="${!readingMode.fichas}" data-ph="Resumo: escreva aqui uma ou duas frases sobre esta ficha.">${e.intro||''}</div>
+${geoLinkHTML}<div class="toc"><b>Conteúdo</b>${e.s.map((s,i)=>`<a class="lnk" data-sc="${i}">${i+1}. ${esc(s.h)}</a>`).join('')}<a class="lnk" data-sc="ap">${e.s.length+1}. Aparições</a></div>
+<div id="ss">${readingMode.fichas?e.s.map(s=>`<section class="read-section"><h3>${esc(s.h)}</h3><div class="read-content">${s.b}</div></section>`).join(''):e.s.map((s,i)=>`<div class="sec" id="s-${i}"><div class="h"><input data-h="${i}" value="${esc(s.h)}" aria-label="Título da seção"><button class="btn g sec-toggle" type="button" data-toggle-sec="${i}" aria-expanded="${!!secOpen[e.id+':'+i]}">${secOpen[e.id+':'+i]?'Ocultar conteúdo':'Editar conteúdo'}</button><button class="btn g" data-x="${i}" title="Remover seção">Remover</button><button class="card-image-header-btn" type="button" data-card-image="${i}" title="Inserir imagem nesta seção">▧ Imagem</button></div><div class="sec-body" ${secOpen[e.id+':'+i]?'':'hidden'}><div class="ed sm card-editable" contenteditable="true" data-b="${i}" data-ph="Escreva aqui. Use o botão discreto abaixo para inserir imagem.">${s.b}</div><div class="card-media-tools"><div class="card-media-options" data-media-options="${i}" hidden><span class="small">Alinhar</span><button type="button" data-media-align="left" title="À esquerda, com texto ao lado">Esq.</button><button type="button" data-media-align="center" title="Centralizar">Centro</button><button type="button" data-media-align="right" title="À direita, com texto ao lado">Dir.</button><button type="button" data-media-align="inline" title="Na linha do texto">No texto</button><label class="small">Tamanho <input type="range" min="20" max="100" value="55" data-media-size="${i}" aria-label="Largura da imagem"></label><button type="button" data-media-remove title="Remover imagem selecionada">Remover imagem</button></div><input type="file" accept="image/*" data-card-file="${i}" hidden></div></div></div>`).join('')}</div>
+<div class="sec" id="s-ap"><div class="h"><h3>Aparições</h3></div>${ap.length?'<ul>'+ap.map(([i,c])=>`<li><a class="lnk" data-ch="${c.id}">Cap. ${i+1}: ${esc(c.t)}</a></li>`).join('')+'</ul>':'<p class="small">Ainda não mencionado em nenhum capítulo. Use @ no texto para mencionar esta ficha.</p>'}</div>
+${evs(e)}<button class="btn" id="as">Nova seção</button> <button class="btn g" id="de" style="color:var(--bad)">Excluir ficha</button></div>
+<aside class="infobox"><div class="t"><span class="small">${esc(e.cat==='Geografia'?(GEO_TYPES[e.placeType]||'Lugar'):(e.f[0]&&e.f[0][1]?e.f[0][1]:e.cat))}</span><br><b style="font-family:var(--fh);font-size:1.3rem;font-weight:500">${esc(e.name)}</b></div>
+${e.img?`<img src="${e.img}" alt="${esc(e.name)}" id="pi" style="cursor:pointer;margin:0;display:block;width:100%" title="Trocar imagem">`:'<div class="ph" id="pi">Clique para adicionar a imagem principal</div>'}
+${e.cat==='Geografia'?geoFieldsHTML:sideFieldsHTML}
+${rl.map(([k,v])=>`<div class="rr"><b>${k}</b><span>${[...new Set(v)].join(', ')}</span></div>`).join('')}
+${rl.length?'<div class="small" style="padding:.3rem .5rem 0">Cônjuge, pais, filhos e irmãos vêm da aba Árvore.</div>':''}${e.cat==='Geografia'?'':'<div style="padding:.5rem"><button class="btn g" id="af">Adicionar campo</button></div>'}</aside></div>`;
+if(readingMode.fichas)$('#pg').classList.add('ficha-read-mode');$('#toggleFichaRead').onclick=()=>{readingMode.fichas=!readingMode.fichas;if(readingMode.fichas)e.s.forEach((_,i)=>secOpen[e.id+':'+i]=true);ficha(e)};if(readingMode.fichas)document.querySelectorAll('#pg input,#pg select,#pg [contenteditable]').forEach(x=>{x.disabled=true;x.contentEditable='false'});$('#pi').onclick=()=>{if(readingMode.fichas)return;last='portrait';$('#fimg').click()};
+if(!readingMode.fichas){$('#en').oninput=ev=>{e.name=ev.target.value;save()};$('#en').onchange=fichas;}
+if(!readingMode.fichas)$('#ec').onchange=ev=>{e.cat=ev.target.value;save();fichas()};
+if(e.cat==='Geografia'&&!readingMode.fichas){$('#geoPlaceType').onchange=ev=>{e.placeType=ev.target.value;save();ficha(e)};$('#geoParent').onchange=ev=>{e.parentGeoId=ev.target.value||null;if(e.parentGeoId)mapLibrary.filter(m=>(m.geoIds||[]).includes(e.parentGeoId)).forEach(m=>cascadeGeoMap(p,e.parentGeoId,m.id,true));save();ficha(e)};$('.geo-map-disclosure').onclick=ev=>{if(ev.target.closest('[data-open-map-library]')){tab='mapas';render()}};$('#geoMapLinks').onchange=ev=>{const box=ev.target.closest('[data-map-id]');if(!box)return;const item=mapLibrary.find(m=>m.id===box.dataset.mapId);if(!item)return;item.geoIds=item.geoIds||[];if(box.checked&&!item.geoIds.includes(e.id))item.geoIds.push(e.id);if(!box.checked)item.geoIds=item.geoIds.filter(id=>id!==e.id);cascadeGeoMap(p,e.id,item.id,box.checked);save();ficha(e)}}
+if(!readingMode.fichas)bindEd($('#ei'),0,h=>{e.intro=h});
+if(!readingMode.fichas)$('#fr').oninput=ev=>{const t=ev.target;if(t.dataset.k!=null)e.f[t.dataset.k][0]=t.value;if(t.dataset.v!=null)e.f[t.dataset.v][1]=t.value;save()};
+if(!readingMode.fichas)$('#fr').onclick=ev=>{if(ev.target.dataset.d!=null){e.f.splice(ev.target.dataset.d,1);save();ficha(e)}};
+if(!readingMode.fichas)$('#af').onclick=()=>{e.f.push([e.cat==='Geografia'?'Nova característica geográfica':'Novo campo','']);save();ficha(e)};
+if(!readingMode.fichas)$('#as').onclick=()=>{e.s.push({h:'Nova seção',b:''});save();ficha(e)};
+if(!readingMode.fichas)$('#ss').oninput=ev=>{const t=ev.target;if(t.dataset.h!=null){e.s[t.dataset.h].h=t.value;save()}};
+if(!readingMode.fichas)$('#ss').onclick=ev=>{const toggle=ev.target.closest('[data-toggle-sec]');if(toggle){const i=toggle.dataset.toggleSec,key=e.id+':'+i,open=!secOpen[key];secOpen[key]=open;toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'Ocultar conteúdo':'Editar conteúdo';toggle.closest('.sec').querySelector('.sec-body').hidden=!open;return}if(ev.target.dataset.x!=null&&confirm('Remover esta seção?')){e.s.splice(ev.target.dataset.x,1);Object.keys(secOpen).filter(k=>k.startsWith(e.id+':')).forEach(k=>delete secOpen[k]);save();ficha(e)}};
+if(!readingMode.fichas)document.querySelectorAll('[data-b]').forEach(el=>bindEd(el,0,h=>{e.s[el.dataset.b].b=h}));
+if(!readingMode.fichas)$('#ss').addEventListener('mousedown',ev=>{if(ev.target.closest('.card-media-tools button'))ev.preventDefault()});
+if(!readingMode.fichas)$('#ss').addEventListener('click',ev=>{const add=ev.target.closest('[data-card-image]');if(add){const section=add.closest('.sec'),index=add.dataset.cardImage;last=section.querySelector('[data-b]');secOpen[e.id+':'+index]=true;section.querySelector('.sec-body').hidden=false;const toggle=section.querySelector('[data-toggle-sec]');if(toggle){toggle.setAttribute('aria-expanded','true');toggle.textContent='Ocultar conteúdo'}section.querySelector('[data-card-file]').click();return}const img=ev.target.closest('.card-editable img');if(img){activeCardImage=img;last=img.closest('.card-editable');const tools=img.closest('.sec').querySelector('[data-media-options]');document.querySelectorAll('[data-media-options]').forEach(x=>x.hidden=true);tools.hidden=false;tools.querySelector('[data-media-size]').value=parseInt(img.style.width)||55;return}const align=ev.target.closest('[data-media-align]');if(align&&activeCardImage&&ev.target.closest('.sec').contains(activeCardImage)){const im=activeCardImage;im.style.display='';im.style.float='';im.style.margin='';im.style.verticalAlign='';if(align.dataset.mediaAlign==='left'||align.dataset.mediaAlign==='right'){const editor=im.closest('.card-editable'),block=im.closest('p,blockquote,li,h2,h3,div')||editor;if(block&&block!==editor)block.insertBefore(im,block.firstChild);else if(block===editor)editor.insertBefore(im,editor.firstChild);if(align.dataset.mediaAlign==='left'){im.style.float='left';im.style.margin='0.2rem 1rem .6rem 0'}else{im.style.float='right';im.style.margin='0.2rem 0 .6rem 1rem'}}else if(align.dataset.mediaAlign==='center'){im.style.display='block';im.style.margin='.7rem auto'}else{im.style.display='inline-block';im.style.verticalAlign='middle';im.style.margin='0 .45rem'}im.closest('.card-editable').dispatchEvent(new Event('input',{bubbles:true}));return}const size=ev.target.closest('[data-media-size]');if(size&&activeCardImage){activeCardImage.style.width=size.value+'%';activeCardImage.style.height='auto';activeCardImage.closest('.card-editable').dispatchEvent(new Event('input',{bubbles:true}));return}const remove=ev.target.closest('[data-media-remove]');if(remove&&activeCardImage){const owner=activeCardImage.closest('.card-editable');activeCardImage.remove();activeCardImage=null;ev.target.closest('[data-media-options]').hidden=true;owner.dispatchEvent(new Event('input',{bubbles:true}))}});
+if(!readingMode.fichas)$('#ss').addEventListener('input',ev=>{const slider=ev.target.closest('[data-media-size]');if(slider&&activeCardImage){activeCardImage.style.width=slider.value+'%';activeCardImage.style.height='auto';activeCardImage.closest('.card-editable').dispatchEvent(new Event('input',{bubbles:true}))}});
+if(!readingMode.fichas)$('#ss').addEventListener('change',async ev=>{const input=ev.target.closest('[data-card-file]'),f=input&&input.files&&input.files[0];if(!f)return;input.value='';const editor=input.closest('.sec').querySelector('[data-b]');try{const src=await shrink(f),img=document.createElement('img');img.src=src;img.alt=f.name.replace(/\.[^.]+$/,'');img.className='editorial-image';img.style.width='55%';img.style.height='auto';editor.focus();if(rng&&editor.contains(rng.startContainer)){const sel=getSelection();sel.removeAllRanges();sel.addRange(rng);rng.deleteContents();rng.insertNode(img);rng.setStartAfter(img);rng.collapse(true);sel.removeAllRanges();sel.addRange(rng)}else editor.append(img);last=editor;editor.dispatchEvent(new Event('input',{bubbles:true}));activeCardImage=img;const tools=input.closest('.sec').querySelector('[data-media-options]');tools.hidden=false;tools.querySelector('[data-media-size]').value=55}catch(err){alert('Não consegui inserir essa imagem. Tente outro arquivo.')}});
+if(!readingMode.fichas)$('#de').onclick=()=>{if(confirm('Excluir esta ficha?')){p.es=p.es.filter(x=>x!==e);eid=null;save();fichas()}}}
+
+/* barra de ferramentas */
+const ed=()=>last&&last!=='portrait'&&document.body.contains(last)?last:null;
+$('#tb').addEventListener('mousedown',e=>{if(e.target.tagName!=='INPUT'&&e.target.tagName!=='SELECT')e.preventDefault()});
+$('#tb').onclick=e=>{const b=e.target.closest('button[data-c]');if(b&&ed()){ed().focus();document.execCommand(b.dataset.c);ed().dispatchEvent(new Event('input'))}};
+$('#blk').onchange=e=>{if(!ed())return;ed().focus();document.execCommand('formatBlock',false,e.target.value);ed().dispatchEvent(new Event('input'))};
+$('#col').oninput=e=>{if(!ed())return;ed().focus();document.execCommand('foreColor',false,e.target.value);ed().dispatchEvent(new Event('input'))};
+document.addEventListener('selectionchange',()=>{const s=getSelection();if(s.rangeCount&&last&&last!=='portrait'&&last.contains(s.anchorNode))rng=s.getRangeAt(0).cloneRange()});
+function restore(){if(!ed()||!rng)return false;ed().focus();const s=getSelection();s.removeAllRanges();s.addRange(rng);return true}
+$('#bLink').onclick=()=>{if(!restore())return;box(`<b>Inserir link</b><br><input type="text" id="lu" placeholder="https://…" style="width:100%;margin:.4rem 0"><button class="btn" id="ls">Aplicar</button>`,()=>{$('#ls').onclick=()=>{const u=$('#lu').value.trim();if(u){restore();document.execCommand('createLink',false,u.startsWith('http')?u:'https://'+u);ed().querySelectorAll('a').forEach(a=>{a.target='_blank';a.rel='noopener'});ed().dispatchEvent(new Event('input'))}hide()}})};
+$('#bImg').onclick=()=>{if(!ed())return alert('Clique dentro de um texto primeiro.');$('#fimg').click()};
+function shrink(file){return new Promise(r=>{const fr=new FileReader();fr.onload=()=>{const i=new Image();i.onload=()=>{const k=Math.min(1,900/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.82))};i.src=fr.result};fr.readAsDataURL(file)})}
+$('#fimg').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const d=await shrink(f);
+if(last==='portrait'){const en=P().es.find(x=>x.id===eid);en.img=d;save();ficha(en)}else if(restore()){document.execCommand('insertImage',false,d);ed().dispatchEvent(new Event('input'))}};
+/* comentários */
+function pos(el,w=280){const r=el.getBoundingClientRect?el.getBoundingClientRect():el;return`left:${Math.max(8,Math.min(innerWidth-w-8,r.left))}px;top:${Math.min(innerHeight-180,r.bottom+6)}px`}
+function box(h,fn,anchor){const b=$('#cmbox');b.innerHTML=h;b.style.cssText=`display:block;${pos(anchor||rng||$('#tb'))}`;fn&&fn()}
+function hide(){$('#cmbox').style.display='none';$('#pop').style.display='none';$('#mmenu').style.display='none'}
+$('#bCm').onclick=()=>{if(!restore()||rng.collapsed)return alert('Selecione uma palavra ou parágrafo para comentar.');const sel=rng.cloneRange();
+box(`<b>Comentário</b><textarea id="ct2" style="width:100%;height:80px;margin:.4rem 0" placeholder="Anote algo sobre este trecho"></textarea><button class="btn" id="cs2">Salvar comentário</button>`,()=>{$('#cs2').onclick=()=>{const t=$('#ct2').value.trim();if(!t)return;const k=uid(),s=document.createElement('span');s.className='cm';s.dataset.k=k;try{sel.surroundContents(s)}catch(x){s.appendChild(sel.extractContents());sel.insertNode(s)}P().cm[k]=t;last.dispatchEvent(new Event('input'));hide()}})};
+/* menções */
+function menu(el){const r=getSelection().getRangeAt(0);rng=r.cloneRange();const m=$('#mmenu'),es=P().es;
+m.innerHTML=es.length?es.map(x=>`<button data-m="${x.id}">${esc(x.name)} <span class="small">${x.cat}</span></button>`).join(''):'<span class="small" style="padding:.5rem;display:block">Crie fichas para poder mencioná-las.</span>';
+const rc=r.getBoundingClientRect();m.style.cssText=`display:block;${pos(rc.width||rc.height?rc:el,220)}`}
+$('#bMn').onclick=()=>{if(restore())menu(ed())};
+$('#mmenu').onclick=e=>{const b=e.target.closest('[data-m]');if(!b)return;const x=P().es.find(y=>y.id===b.dataset.m);restore();document.execCommand('insertHTML',false,`<span class="mn" data-e="${x.id}" contenteditable="false">${esc(x.name.split(' ')[0])}</span>&nbsp;`);ed().dispatchEvent(new Event('input'));hide()};
+/* cartão rápido e comentários por clique */
+function card(t){const x=P().es.find(y=>y.id===t.dataset.e);if(!x)return;const p=$('#pop');p.innerHTML=`${x.img?`<img src="${x.img}" alt="">`:''}<b style="font-family:var(--fh);font-size:1.2rem">${esc(x.name)}</b> <span class="tag">${x.cat}</span><dl style="margin:.4rem 0;display:grid;grid-template-columns:auto 1fr;gap:.1rem .6rem">${x.f.filter(r=>r[1]).slice(0,5).map(r=>`<dt class="small">${esc(r[0])}</dt><dd style="margin:0">${esc(r[1])}</dd>`).join('')}</dl><button class="btn g" data-go="${x.id}">Abrir ficha completa</button>`;p.style.cssText=`display:block;${pos(t)}`}
+document.addEventListener('click',e=>{const m=e.target.closest('.mn'),c=e.target.closest('.cm'),g=e.target.closest('[data-go]'),mg=e.target.closest('[data-map-go]'),ma=e.target.closest('[data-mapasset-go]');
+if(ma){mapAssetId=ma.dataset.mapassetGo;tab='mapas';render();return}
+if(mg){mapId=mg.dataset.mapGo;tab='mapas';render();return}
+if(g){eid=g.dataset.go;tab='fichas';hide();render();return}
+if(m){card(m);return}
+if(c&&c.dataset.k){const k=c.dataset.k;box(`<b>Comentário</b><textarea id="ct3" style="width:100%;height:70px;margin:.4rem 0">${esc(P().cm[k]||'')}</textarea><button class="btn" id="cs3">Salvar</button> <button class="btn g" id="cd3">Remover</button>`,()=>{$('#cs3').onclick=()=>{P().cm[k]=$('#ct3').value;save();stats();hide()};$('#cd3').onclick=()=>{const w=document.createElement('div');w.innerHTML=c.innerHTML;c.replaceWith(...w.childNodes);delete P().cm[k];last&&last.dispatchEvent(new Event('input'));hide()}},c);return}
+if(!e.target.closest('#cmbox,#mmenu,#pop,#tb'))hide()});
+
+function mapas(){const p=P();p.mapLibrary=p.mapLibrary||[];const geo=p.es.filter(x=>x.cat==='Geografia'),kinds=[['regiao','Região ou localidade'],['planeta','Planeta ou mundo'],['sistema','Sistema solar'],['outro','Outro tipo de mapa']];
+const getGeo=id=>p.es.find(x=>x.id===id);const card=x=>{const refs=(x.geoIds||[]).map(getGeo).filter(Boolean);return `<article class="card map-asset-card"><div class="map-asset-preview">${x.image?`<img src="${x.image}" alt="${esc(x.name)}">`:`<div class="map-asset-empty">${x.kind==='sistema'?'✦':'⌖'}<span>Sem imagem anexada</span></div>`}</div><div class="map-asset-content"><span class="tag">${esc(MAP_TYPES[x.kind]||MAP_TYPES.outro)}</span><h3>${esc(x.name)}</h3>${x.description?`<p>${esc(x.description)}</p>`:''}<div class="map-asset-links">${refs.length?refs.map(r=>`<span class="map-place-chip">${esc(r.name)}</span>`).join(''):'<span class="small">Ainda sem fichas vinculadas</span>'}</div><div class="map-asset-actions">${x.image?`<button class="btn" data-mapasset-pins="${x.id}">⌖ Explorar / Pinos (${(x.pins||[]).length})</button>`:''}<button class="btn g" data-mapasset-edit="${x.id}">Editar</button><button class="btn g" data-mapasset-delete="${x.id}">Remover</button></div></div></article>`};
+$('#m').innerHTML=`<div class="map-library-head"><div><h2>Mapas e referências</h2><p class="small">Anexe mapas de lugares, mundos e sistemas solares e conecte-os às fichas de Geografia do seu projeto.</p></div><button class="btn" id="mapAssetNew">＋ Adicionar mapa</button></div><div id="mapLibraryList" class="map-library">${p.mapLibrary.length?p.mapLibrary.map(card).join(''):'<div class="card map-empty-state"><span>⌖</span><h3>Seu atlas começa aqui</h3><p class="small">Adicione uma imagem de mapa e associe-a aos lugares do seu universo.</p><button class="btn" data-empty-create>Adicionar primeiro mapa</button></div>'}</div>
+<div id="mapAssetPanel" class="card map-asset-form-wrap" hidden><div class="map-library-head"><div><h3 id="mapAssetHeading">Novo mapa</h3><p class="small">Escolha a categoria, anexe a imagem e conecte as fichas relacionadas.</p></div><button class="btn g" type="button" id="mapAssetCancel">Fechar</button></div><form id="mapAssetForm"><div class="map-form-grid"><label>Nome do mapa<input id="mapAssetName" type="text" placeholder="Ex.: Vale do Norte" required></label><label>Categoria<select id="mapAssetKind">${kinds.map(k=>`<option value="${k[0]}">${k[1]}</option>`).join('')}</select></label></div><label class="map-upload-label">Imagem do mapa<input id="mapAssetImage" type="file" accept="image/*"><span class="small">Você pode anexar uma imagem existente; ela será ajustada para caber no projeto.</span></label><img id="mapAssetPreview" class="map-form-preview" alt="Pré-visualização do mapa" hidden><label>Descrição ou notas<textarea id="mapAssetDescription" rows="3" placeholder="Anotações sobre escala, regiões, planetas ou convenções do mapa"></textarea></label><fieldset class="map-geo-field"><legend>Vincular a fichas de Geografia</legend><p class="small">Selecione os lugares, planetas ou regiões representados nesta imagem.</p><div id="mapGeoChoices" class="map-geo-choices"></div></fieldset><div class="row" style="justify-content:flex-end"><button class="btn g" type="button" id="mapAssetCancel2">Cancelar</button><button class="btn" type="submit">Salvar mapa</button></div></form></div>
+<div id="mapInteractiveModal" class="card" style="margin:1.2rem 0" hidden></div>
+<div class="map-coming-soon"><span class="map-coming-icon">✦</span><div><span class="tag">DICA DO ATLAS</span><h3>Pinos interativos disponíveis</h3><p>Clique em <b>"⌖ Explorar / Pinos"</b> em qualquer mapa com imagem acima para marcar cidades, reinos ou pontos de interesse diretamente sobre a imagem e ligá-los às suas fichas de Geografia.</p></div></div>`;
+const panel=$('#mapAssetPanel'),form=$('#mapAssetForm'),preview=$('#mapAssetPreview');let current=mapAssetId?p.mapLibrary.find(x=>x.id===mapAssetId):null,pendingImage=current?.image||'';
+function renderGeoChoices(selected=[]){const box=$('#mapGeoChoices');box.innerHTML=geo.length?geo.map(x=>`<label class="map-geo-choice"><input type="checkbox" value="${x.id}" ${selected.includes(x.id)?'checked':''}><span><b>${esc(x.name)}</b><small>${esc(GEO_TYPES[x.placeType]||'Lugar sem classificação')}${x.parentGeoId?` · parte de ${esc(geo.find(q=>q.id===x.parentGeoId)?.name||'')}`:''}${x.f?.find(a=>/região|tipo/i.test(a[0])&&a[1])?` · ${esc(x.f.find(a=>/região|tipo/i.test(a[0])&&a[1])[1])}`:''}</small></span></label>`).join(''):'<p class="small">Ainda não há fichas de Geografia. Crie uma na aba Fichas para vinculá-la aqui.</p>'}
+function openForm(item=null){current=item;mapAssetId=item?.id||null;pendingImage=item?.image||'';panel.hidden=false;$('#mapAssetHeading').textContent=item?'Editar mapa':'Novo mapa';$('#mapAssetName').value=item?.name||'';$('#mapAssetKind').value=item?.kind||'regiao';$('#mapAssetDescription').value=item?.description||'';$('#mapAssetImage').value='';preview.src=pendingImage||'';preview.hidden=!pendingImage;renderGeoChoices(item?.geoIds||[]);panel.scrollIntoView({behavior:'smooth',block:'start'})}
+function closeForm(){panel.hidden=true;current=null;mapAssetId=null;form.reset();preview.hidden=true;pendingImage=''}
+$('#mapAssetNew').onclick=()=>openForm();$('#mapAssetCancel').onclick=closeForm;$('#mapAssetCancel2').onclick=closeForm;function openPinViewer(item){if(!item||!item.image)return;item.pins=item.pins||[];const box=$('#mapInteractiveModal');box.hidden=false;
+const renderPins=()=>{box.innerHTML=`<div class="map-library-head"><div><h3>⌖ ${esc(item.name)} — Pinos Interativos</h3><p class="small">Clique em qualquer ponto da imagem para espetar um pino. Clique em um pino para abrir a ficha ou removê-lo.</p></div><button class="btn g" id="closePinView">Fechar mapa</button></div>
+<div class="row" style="align-items:flex-end;gap:.6rem;margin-bottom:.6rem"><label class="small">Vincular próximo pino à ficha de Geografia:<br><select id="pinGeoSel"><option value="">Apenas rótulo de texto livre</option>${geo.map(g=>`<option value="${g.id}">${esc(g.name)} (${esc(GEO_TYPES[g.placeType]||'Lugar')})</option>`).join('')}</select></label></div>
+<div class="map-interactive-stage"><div class="map-stage-inner" id="mapStageInner"><img src="${item.image}" alt="${esc(item.name)}" id="mapPinImg">${item.pins.map((pn,idx)=>{const gf=pn.geoId?getGeo(pn.geoId):null,lbl=gf?gf.name:pn.label;return `<div class="map-pin-marker" style="left:${pn.x}%;top:${pn.y}%" data-pin-idx="${idx}" title="Clique para opções"><span class="map-pin-label">${esc(lbl)}</span><div class="map-pin-dot"><span>⌖</span></div></div>`}).join('')}</div></div>`;
+$('#closePinView').onclick=()=>{box.hidden=true;mapas()};
+$('#mapPinImg').onclick=ev=>{const r=ev.target.getBoundingClientRect(),x=+(((ev.clientX-r.left)/r.width)*100).toFixed(2),y=+(((ev.clientY-r.top)/r.height)*100).toFixed(2),gid=$('#pinGeoSel').value,gf=gid?getGeo(gid):null;
+let label=gf?gf.name:prompt('Nome deste ponto no mapa:');if(!label)return;
+item.pins.push({id:uid(),x,y,geoId:gid||null,label:label.trim()});
+if(gid){item.geoIds=item.geoIds||[];if(!item.geoIds.includes(gid))item.geoIds.push(gid)}
+save();renderPins()};
+box.querySelectorAll('[data-pin-idx]').forEach(el=>el.onclick=ev=>{ev.stopPropagation();const idx=+el.dataset.pinIdx,pn=item.pins[idx],gf=pn.geoId?getGeo(pn.geoId):null;
+if(gf){if(confirm('Pino: "'+gf.name+'". Clique em OK para abrir a ficha de Geografia, ou Cancelar para opções de exclusão.')){eid=gf.id;tab='fichas';render();return}}
+if(confirm(`Remover o pino "${gf?gf.name:pn.label}" deste mapa?`)){item.pins.splice(idx,1);save();renderPins()}})};
+renderPins();box.scrollIntoView({behavior:'smooth',block:'start'})}
+$('#mapLibraryList').onclick=e=>{if(e.target.closest('[data-empty-create]'))openForm();const pinBtn=e.target.closest('[data-mapasset-pins]');if(pinBtn)openPinViewer(p.mapLibrary.find(x=>x.id===pinBtn.dataset.mapassetPins));const edit=e.target.closest('[data-mapasset-edit]');if(edit)openForm(p.mapLibrary.find(x=>x.id===edit.dataset.mapassetEdit));const del=e.target.closest('[data-mapasset-delete]');if(del){const item=p.mapLibrary.find(x=>x.id===del.dataset.mapassetDelete);if(item&&confirm(`Remover “${item.name}” do atlas?`)){p.mapLibrary=p.mapLibrary.filter(x=>x!==item);if(mapAssetId===item.id)mapAssetId=null;save();mapas()}}};
+function shrinkMap(file){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onerror=()=>reject(new Error('Falha ao ler imagem'));fr.onload=()=>{const img=new Image();img.onerror=()=>reject(new Error('Imagem inválida'));img.onload=()=>{const scale=Math.min(1,1800/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext('2d').drawImage(img,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',.86))};img.src=fr.result};fr.readAsDataURL(file)})}
+$('#mapAssetImage').onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{pendingImage=await shrinkMap(f);preview.src=pendingImage;preview.hidden=false}catch(x){alert('Não consegui abrir esta imagem. Tente outro arquivo.')}};
+form.onsubmit=async e=>{e.preventDefault();const name=$('#mapAssetName').value.trim();if(!name)return;const geoIds=[...$('#mapGeoChoices').querySelectorAll('input:checked')].map(x=>x.value),data={id:current?.id||uid(),name,kind:$('#mapAssetKind').value,description:$('#mapAssetDescription').value.trim(),image:pendingImage,geoIds,pins:current?.pins||[]};if(current){const oldIds=current.geoIds||[];Object.assign(current,data);oldIds.filter(id=>!geoIds.includes(id)).forEach(id=>cascadeGeoMap(p,id,data.id,false))}else p.mapLibrary.push(data);geoIds.forEach(id=>cascadeGeoMap(p,id,data.id,true));save();mapAssetId=null;mapas()};
+if(current)openForm(current)}
+
+function look(){$('#m').innerHTML=`<h2>Aparência</h2><div class="pal">${[['--bg','Fundo'],['--panel','Painéis'],['--ink','Texto'],['--accent','Destaque'],['--line','Linhas']].map(([v,l])=>`<label>${l}<input type="color" data-v="${v}" value="${getComputedStyle(root).getPropertyValue(v).trim()}"></label>`).join('')}</div>
+<h3 style="margin-top:1.2rem">Tipografia</h3><div class="row" style="align-items:flex-end"><label class="small">Fonte do texto<br><select id="fb"></select></label><label class="small">Fonte dos títulos<br><select id="fh"></select></label><label class="small">Enviar sua fonte (.ttf, .otf, .woff2)<br><input type="file" id="fup" accept=".ttf,.otf,.woff,.woff2"></label></div><p class="small" id="fm"></p>
+<button class="btn g" id="th">Alternar claro e escuro</button> <button class="btn g" id="rs">Restaurar padrão</button>`;
+const F=['Inter, ui-sans-serif, system-ui, sans-serif','Georgia, serif','Source Serif 4, Georgia, serif','Cormorant Garamond, Georgia, serif','Cinzel, Georgia, serif'];
+['fb','fh'].forEach(k=>{$('#'+k).innerHTML=F.map(f=>`<option value="${f}">${f.split(',')[0]}</option>`).join('');$('#'+k).value=getComputedStyle(root).getPropertyValue('--'+k).trim();$('#'+k).onchange=e=>root.style.setProperty('--'+k,e.target.value)});
+$('.pal').oninput=e=>root.style.setProperty(e.target.dataset.v,e.target.value);
+$('#fup').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const ff=new FontFace('MinhaFonte',await f.arrayBuffer());await ff.load();document.fonts.add(ff);['fb','fh'].forEach(k=>{const o=new Option(f.name+' (sua fonte)',"'MinhaFonte', serif");$('#'+k).add(o)});root.style.setProperty('--fb',"'MinhaFonte',serif");$('#fb').selectedIndex=$('#fb').options.length-1;$('#fm').textContent='Fonte carregada e aplicada ao texto! Você também pode selecioná-la nos títulos.'}catch(x){$('#fm').textContent='Não consegui ler esse arquivo de fonte.'}};
+$('#th').onclick=()=>{const d=root.dataset.theme==='dark'||(!root.dataset.theme&&matchMedia('(prefers-color-scheme:dark)').matches);root.dataset.theme=d?'light':'dark';['--bg','--panel','--ink','--accent','--line'].forEach(v=>root.style.removeProperty(v));look()};
+$('#rs').onclick=()=>{root.removeAttribute('style');root.removeAttribute('data-theme');look()}}
+/* verificador de discrepâncias */
+let vd=false;
+const txt=h=>{const d=document.createElement('div');d.innerHTML=String(h||'').split('</').join(' </');return d.textContent};
+const COR=new Set('verd azul castanh cinz cinzent negr pret dourad âmbar ambar violet rox mel ruiv loir lour grisalh branc pratead cobr'.split(' '));
+const nz=s=>s.toLowerCase().replace(/is$/,'l').replace(/[aeos]+$/,'');
+function checar(p,dr){const out=[],nm=x=>x.name.split(' ')[0],num=s=>{const m=String(s||'').match(/-?[0-9]+/);return m?+m[0]:null},fld=(e,re)=>{const r=e.f.find(r=>re.test(r[0]));return r?r[1]:''},
+has=(s,n)=>{let i=s.indexOf(n);while(i>=0){const a=s[i-1],b=s[i+n.length];if(!(a&&/[A-Za-zÀ-ÿ]/.test(a))&&!(b&&/[A-Za-zÀ-ÿ]/.test(b)))return true;i=s.indexOf(n,i+1)}return false},
+A=p.es.filter(x=>x.cat==='Personagens'),ev=p.tl||[],cs=p.ch.map((c,i)=>({c,i,s:txt(c.final+(dr?' '+c.draft:'')).split(/(?<=[.!?])\s+/)})),
+yc=c=>{const v=ev.find(v=>v.ch===c.id);return v?v.y:null},add=(sev,t,a,b,ch,eid)=>out.push({sev,t,a,b,ch,eid,k:t+'|'+a[1].slice(0,60)});
+A.forEach(e=>{const n=nm(e),b=num(fld(e,/nasc/i)),first={},at=[['olhos',fld(e,/olhos/i),/olhos +([A-Za-zÀ-ÿ]+)/i,'Olhos'],['cabelo',fld(e,/cabelo/i),/cabelos? +([A-Za-zÀ-ÿ]+)/i,'Cabelo']];
+cs.forEach(({c,i,s})=>s.forEach(x=>{if(!has(x,n)||A.filter(q=>has(x,nm(q))).length!==1)return;const lab='Cap. '+(i+1),y=yc(c),m=x.slice(x.indexOf(n)).match(/([0-9]+) anos/);
+if(m&&b!=null&&y!=null&&+m[1]!==y-b)add('high','Idade de '+n+' não bate',[lab,x],['Ficha e linha do tempo','Nascimento em '+b+'; no ano '+y+' teria '+(y-b)+' anos'],c.id,e.id);
+at.forEach(([w,v,re,L])=>{const q=x.match(re);if(!q||!COR.has(nz(q[1])))return;const ref=v.trim().split(/[ ,]+/)[0];
+if(ref){if(nz(ref)!==nz(q[1]))add('high',L+' de '+n+' muda',[lab,x],['Ficha',L+': '+v],c.id,e.id)}
+else if(first[w]){if(nz(first[w][0])!==nz(q[1]))add('high',L+' de '+n+' muda entre capítulos',[lab,x],[first[w][2],first[w][1]],c.id,e.id)}else first[w]=[q[1],x,lab]})}));
+const dd=ev.find(v=>v.pp.includes(e.id)&&/morr|morte|falec|assassin/i.test(v.t)),dk=dd&&dd.ch?p.ch.findIndex(c=>c.id===dd.ch):-1,dy=num(fld(e,/morte|falec/i))??(dd?dd.y:null);
+if(dk>=0)cs.forEach(({c,i,s})=>{const x=i>dk&&s.find(x=>has(x,n));if(x)add('med',n+' aparece depois de morrer',['Cap. '+(i+1),x],['Linha do tempo','“'+dd.t+'” no cap. '+(dk+1)],c.id,e.id)});
+ev.filter(v=>v.pp.includes(e.id)).forEach(v=>{if(b!=null&&v.y<b&&!/nasc/i.test(v.t))add('high',n+' em evento antes de nascer',['Linha do tempo',v.y+': '+v.t],['Ficha','Nascimento em '+b],v.ch,e.id);if(dy!=null&&v.y>dy&&v!==dd&&!/morr|morte|funer|vel[óo]rio|luto/i.test(v.t))add('med',n+' em evento depois de morrer',['Linha do tempo',v.y+': '+v.t],['Ficha','Morte em '+dy],v.ch,e.id)})});
+(p.trees||[]).forEach(t=>t.l.filter(l=>l.t==='p').forEach(l=>{const a=t.n.find(x=>x.id===l.a),c=t.n.find(x=>x.id===l.b),fa=a&&p.es.find(x=>x.id===a.e),fc=c&&p.es.find(x=>x.id===c.e),ba=fa&&num(fld(fa,/nasc/i)),bc=fc&&num(fld(fc,/nasc/i));if(ba!=null&&bc!=null&&ba>bc-12)add('high',a.name+' é jovem demais para ser pai ou mãe de '+c.name,['Árvore '+t.name,a.name+' nasceu em '+ba],['Árvore '+t.name,c.name+' nasceu em '+bc],null,fa.id)}));
+let pv=null;cs.forEach(({c,i})=>{const y=yc(c);if(y==null)return;if(pv&&y<pv.y)add('med','Capítulo fora da ordem cronológica',['Cap. '+(i+1),'Ano '+y],['Cap. '+(pv.i+1),'Ano '+pv.y],c.id);pv={y,i}});
+return out}
+function verif(){const p=P();p.ok=p.ok||{};const all=checar(p,vd).concat(p.ai||[]),on=all.filter(x=>!p.ok[x.k]),off=all.filter(x=>p.ok[x.k]),
+cd=x=>`<div class="card dc ${x.sev==='high'?'':'med'}" style="margin:.7rem 0"><b>${x.ia?'<span class="tag">IA</span> ':''}${esc(x.t)}</b><div class="pair"><div><b>${esc(x.a[0])}</b>${esc(x.a[1])}</div><div><b>${esc(x.b[0])}</b>${esc(x.b[1])}</div></div>${x.ch?`<a class="lnk" data-ch="${x.ch}" data-v="final">Corrigir no capítulo</a> `:''}${x.eid?`<a class="lnk" data-go="${x.eid}">Abrir ficha</a> `:''}<button class="btn g" data-vk="${esc(x.k)}">Marcar como intencional</button></div>`;
+$('#m').innerHTML=`<div class="row" style="align-items:center;justify-content:space-between"><h2>Discrepâncias</h2><label class="small"><input type="checkbox" id="vd" ${vd?'checked':''}> Incluir rascunhos</label></div>
+<p class="small">Confere idades, cor dos olhos e do cabelo, personagens que reaparecem depois de morrer, eventos fora do tempo de vida, pais mais novos que os filhos e a ordem cronológica, comparando capítulos, fichas, árvores e linha do tempo. Para checar idade e ordem, ligue cada evento da linha do tempo ao seu capítulo.</p>
+<div class="card"><div class="row" style="align-items:center;gap:.6rem"><button class="btn" id="vai">Análise com IA</button><input type="password" id="gkey" placeholder="Chave API Gemini (opcional no navegador)" value="${esc(localStorage.getItem('atelier-gemini-key')||'')}" style="max-width:260px;font-size:.82rem" title="Cole sua chave gratuita do Google AI Studio para rodar direto no navegador"></div><span class="small" id="vst" style="display:block;margin-top:.4rem">Procura contradições de personalidade, regras do mundo e conhecimento dos personagens. O texto dos capítulos e das fichas é enviado à IA.</span></div>
+<p><b>${on.length}</b> ${on.length===1?'alerta':'alertas'}</p>${on.map(cd).join('')||'<div class="card">Nenhuma discrepância encontrada por enquanto.</div>'}
+${off.length?`<h3 style="margin-top:1.2rem">Marcadas como intencionais (${off.length})</h3>${off.map(x=>`<div class="card small" style="margin:.4rem 0;opacity:.75">${esc(x.t)}: ${esc(x.a[1].slice(0,80))} <button class="btn g" data-vu="${esc(x.k)}">Desfazer</button></div>`).join('')}`:''}`;
+$('#vd').onchange=e=>{vd=e.target.checked;verif()};
+$('#m').onclick=e=>{if(tab!=='verif')return;const b=e.target.closest('button');if(!b)return;if(b.dataset.vk){p.ok[b.dataset.vk]=1;save();verif()}if(b.dataset.vu){delete p.ok[b.dataset.vu];save();verif()}};
+$('#gkey').onchange=e=>{try{localStorage.setItem('atelier-gemini-key',e.target.value.trim())}catch(x){}};
+$('#vai').onclick=async()=>{const s=$('#vst'),gk=($('#gkey')?.value||'').trim(),NL=String.fromCharCode(10);if(gk)try{localStorage.setItem('atelier-gemini-key',gk)}catch(x){}
+let sm=null;try{if(typeof claude!=='undefined')sm=await claude.use('sample')}catch(x){}
+if(!sm&&!gk){s.textContent='Para usar a análise por IA direto no navegador, insira uma Chave API do Gemini no campo acima.';return}
+s.textContent='Analisando… isso pode levar alguns segundos.';
+const fx=p.es.map(e=>`## ${e.name} (${e.cat}): ${e.f.filter(r=>r[1]).map(r=>r[0]+' '+r[1]).join('; ')}. ${txt(e.intro)} ${e.s.map(z=>z.h+': '+txt(z.b)).join(' ')}`.slice(0,900)).join(' || '),tl=(p.tl||[]).map(v=>v.y+' '+(p.era||'')+': '+v.t).join(' || '),cap=p.ch.map((c,i)=>'### Capítulo '+(i+1)+': '+c.t+NL+txt(c.final).slice(0,4000)).join(NL).slice(0,40000);
+const promptText=`Você revisa a continuidade de uma história. Procure contradições e furos entre os capítulos, as fichas e a linha do tempo: personalidade, regras do mundo (magia, política, religião), conhecimento dos personagens (sabe o que ainda não poderia saber), lugares, relações, nomes e datas. Ignore estilo e preferências. Só aponte o que tem evidência nos textos e cite trechos curtos. Responda SOMENTE com um array JSON, com no máximo 12 itens (array vazio se não houver nada), neste formato: [{"gravidade":"alta ou media","titulo":"","rotulo_a":"Cap. 2","texto_a":"","rotulo_b":"Ficha de Fulano","texto_b":"","capitulo":2}]. Use null em capitulo se não se aplicar. FICHAS: ${fx} LINHA DO TEMPO: ${tl} CAPÍTULOS: ${cap}`;
+try{let r;if(sm){r=await sm.json(promptText,{modelTier:'default',cache:false})}else{const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(gk),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:promptText}]}],generationConfig:{responseMimeType:'application/json'}})});if(!resp.ok)throw new Error('API Error');const d=await resp.json(),raw=d.candidates?.[0]?.content?.parts?.[0]?.text||'[]';r=JSON.parse(raw)}
+p.ai=(Array.isArray(r)?r:[]).slice(0,12).map(x=>({ia:1,sev:x.gravidade==='alta'?'high':'med',t:String(x.titulo||'Possível discrepância'),a:[String(x.rotulo_a||'Trecho A'),String(x.texto_a||'')],b:[String(x.rotulo_b||'Trecho B'),String(x.texto_b||'')],ch:x.capitulo&&p.ch[x.capitulo-1]?p.ch[x.capitulo-1].id:null,eid:null,k:'ia|'+String(x.titulo||'').slice(0,50)+String(x.texto_a||'').slice(0,40)}));save();verif()}
+catch(x){s.textContent='Não consegui concluir a análise. Verifique sua chave API ou conexão.'}}}
+/* backup e exportação */
+function downloadBlob(data,filename,type='application/json'){const b=new Blob([data],{type}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function exportProjectHTML(p){const html=`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>${esc(p.name)}</title><style>body{font-family:Georgia,serif;line-height:1.75;max-width:780px;margin:2.5rem auto;padding:0 1.2rem;color:#222}h1{border-bottom:1px solid #ddd;padding-bottom:.5rem}h2{margin-top:2.5rem}blockquote{border-left:3px solid #6654c6;padding-left:1rem;font-style:italic;color:#555}</style></head><body><h1>${esc(p.name)}</h1>${p.syn?`<p><i>${esc(p.syn)}</i></p>`:''}${p.ch.map((c,i)=>`<section><h2>Capítulo ${i+1}: ${esc(c.t)}</h2><div>${c.final||c.draft||'<p><i>(Sem conteúdo)</i></p>'}</div></section>`).join('')}</body></html>`;downloadBlob(html,(p.name||'historia').toLowerCase().replace(/[^a-z0-9]+/gi,'-')+'.html','text/html;charset=utf-8')}
+function exportProjectMD(p){const NL=String.fromCharCode(10);const md='# '+p.name+NL+NL+(p.syn?'> '+p.syn+NL+NL:'')+p.ch.map((c,i)=>'## Capítulo '+(i+1)+': '+c.t+NL+NL+txt(c.final||c.draft).trim()+NL+NL+'---'+NL).join(NL);downloadBlob(md,(p.name||'historia').toLowerCase().replace(/[^a-z0-9]+/gi,'-')+'.md','text/markdown;charset=utf-8')}
+$('#bk').onclick=async e=>{e.stopPropagation();
+box(`<b>Backup & Exportação</b><p class="small" style="margin:.3rem 0">Salve um arquivo .json com todos os seus projetos, capítulos, fichas, imagens, mapas, árvores e eventos.</p><div class="row" style="gap:.4rem;margin:.5rem 0"><button class="btn" id="bd">⬇ Baixar backup (.json)</button></div>${pid?`<hr style="border:0;border-top:1px solid var(--line);margin:.7rem 0"><b>Exportar projeto atual</b><div class="row" style="gap:.4rem;margin:.4rem 0"><button class="btn g" id="exH">Exportar HTML</button><button class="btn g" id="exM">Exportar Markdown</button></div>`:''}<hr style="border:0;border-top:1px solid var(--line);margin:.7rem 0"><label class="small">Restaurar de um arquivo de backup (.json)<br><input type="file" id="br" accept=".json,application/json"></label><div id="bm" class="small" style="margin-top:.4rem"></div>`,()=>{
+const msg=t=>$('#bm').textContent=t,json=()=>JSON.stringify({app:'atelie-de-mundos',v:2,saved:new Date().toISOString(),ps:S.ps},null,2);
+$('#bd').onclick=()=>{try{downloadBlob(json(),'backup-atelie-'+new Date().toISOString().slice(0,10)+'.json');msg('Backup baixado com sucesso!')}catch(x){msg('Não foi possível baixar o arquivo.')}};
+if(pid){$('#exH').onclick=()=>{exportProjectHTML(P());msg('HTML exportado!')};$('#exM').onclick=()=>{exportProjectMD(P());msg('Markdown exportado!')}}
+$('#br').onchange=ev=>{const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{let j;try{j=JSON.parse(r.result)}catch(x){}
+if(!j||!Array.isArray(j.ps)||j.ps.some(p=>!Array.isArray(p.ch)||!Array.isArray(p.es)))return msg('Esse arquivo não parece ser um backup do Ateliê de Mundos.');
+$('#bm').innerHTML=`<p>Backup com ${j.ps.length} projeto(s). O que fazer?</p><button class="btn" id="ba">Adicionar aos meus projetos</button> <button class="btn g" id="bs" style="color:var(--bad)">Substituir tudo</button>`;
+const fin=()=>{pid=null;tab='escrita';save();hide();render()};
+$('#ba').onclick=()=>{j.ps.forEach(p=>{if(S.ps.some(x=>x.id===p.id))p.id=uid();S.ps.push(p)});fin()};
+$('#bs').onclick=()=>{S={ps:j.ps};fin()}};r.readAsText(f)}},$('#bk'))};
+/* planejamento de capítulos */
+function plano(){const p=P(),A=p.es.filter(x=>x.cat==='Personagens'),G=p.es.filter(x=>x.cat==='Geografia'),pl=c=>c.plan=c.plan||{obj:'',beats:'',pov:'',loc:'',hook:'',goal:0,pp:[]},g=id=>p.ch.find(c=>c.id===id);
+const opt=(l,v,ph)=>`<option value="">${ph}</option>`+l.map(x=>`<option value="${x.id}" ${x.id===v?'selected':''}>${esc(x.name)}</option>`).join('');
+$('#m').innerHTML=`<div class="row" style="align-items:center;justify-content:space-between"><h2>Planejamento de capítulos</h2><span class="small">Use ↑ e ↓ para mudar a ordem.</span></div>
+<div class="card"><div class="row" style="align-items:flex-end;gap:.6rem"><label class="small" style="flex:1;min-width:200px">Novo capítulo planejado<br><input type="text" id="pn2" style="width:100%" placeholder="Título ou ideia do capítulo"></label><button class="btn" id="pa">Adicionar ao plano</button></div></div>
+${p.ch.map((c,i)=>{const q=pl(c),w=words(c.final)||words(c.draft),pc=q.goal?Math.min(100,Math.round(w/q.goal*100)):0,st=words(c.final)?'Oficial':words(c.draft)?'Rascunho':'Planejado';return `<div class="card" style="margin:.8rem 0">
+<div class="row" style="gap:.5rem;align-items:center;margin-bottom:.5rem"><b style="font-family:var(--fh);font-size:1.3rem">${i+1}.</b><input type="text" data-pt="${c.id}" value="${esc(c.t)}" aria-label="Título" style="flex:1;min-width:160px;font-weight:600"><span class="tag">${st}</span><button class="btn g" data-pu="${c.id}" title="Subir" ${i?'':'disabled'}>↑</button><button class="btn g" data-pd="${c.id}" title="Descer" ${i<p.ch.length-1?'':'disabled'}>↓</button><button class="btn g" data-px="${c.id}" style="color:var(--bad)">Remover</button></div>
+<label class="small">Objetivo do capítulo<br><textarea data-po="${c.id}" rows="2" style="width:100%;min-height:56px">${esc(q.obj)}</textarea></label>
+<label class="small">Cenas e pontos-chave (um por linha)<br><textarea data-pb="${c.id}" rows="3" style="width:100%;min-height:84px">${esc(q.beats)}</textarea></label>
+<div class="row" style="gap:.8rem;align-items:flex-end;margin:.4rem 0"><label class="small">Ponto de vista<br><select data-pv="${c.id}">${opt(A,q.pov,'Nenhum')}</select></label><label class="small">Local<br><select data-pc="${c.id}">${opt(G,q.loc,'Nenhum')}</select></label><label class="small">Personagens<br><select data-pp="${c.id}">${opt(A.filter(x=>!q.pp.includes(x.id)),'','Adicionar…')}</select></label><label class="small">Meta de palavras<br><input type="number" data-pg="${c.id}" value="${q.goal||''}" style="width:100px"></label></div>
+<p style="margin:.3rem 0">${q.pp.map(id=>{const f=p.es.find(x=>x.id===id);return f?`<span class="tag"><a class="lnk" data-go="${f.id}">${esc(f.name)}</a> <button data-prp="${c.id}|${id}" title="Remover" style="background:none;border:0;color:var(--bad);cursor:pointer">×</button></span> `:''}).join('')}</p>
+<label class="small">Gancho ou final do capítulo<br><input type="text" data-pk="${c.id}" value="${esc(q.hook)}" style="width:100%"></label>
+${q.goal?`<div class="small" style="margin-top:.5rem">${w} de ${q.goal} palavras (${pc}%)</div><div style="height:8px;background:var(--line);border-radius:4px;overflow:hidden"><i style="display:block;height:100%;width:${pc}%;background:var(--accent)"></i></div>`:''}
+<p style="margin:.6rem 0 0"><a class="lnk" data-ch="${c.id}" data-v="${st==='Rascunho'?'draft':'final'}">Abrir para escrever</a></p></div>`}).join('')}`;
+$('#pa').onclick=()=>{const t=$('#pn2').value.trim();if(!t)return $('#pn2').focus();p.ch.push({id:uid(),t,draft:'',final:''});save();plano()};
+$('#m').oninput=e=>{if(tab!=='plano')return;const t=e.target.dataset,v=e.target.value;if(t.pt)g(t.pt).t=v;if(t.po)pl(g(t.po)).obj=v;if(t.pb)pl(g(t.pb)).beats=v;if(t.pk)pl(g(t.pk)).hook=v;if(t.pg)pl(g(t.pg)).goal=+v||0;if(t.pt||t.po||t.pb||t.pk||t.pg)save()};
+$('#m').onchange=e=>{if(tab!=='plano')return;const t=e.target.dataset,v=e.target.value;if(t.pv){pl(g(t.pv)).pov=v;save()}if(t.pc){pl(g(t.pc)).loc=v;save()}if(t.pp&&v){pl(g(t.pp)).pp.push(v);save();plano()}if(t.pg)plano()};
+$('#m').onclick=e=>{if(tab!=='plano')return;const b=e.target.closest('button');if(!b||b.disabled)return;const t=b.dataset,mv=(id,d)=>{const i=p.ch.findIndex(c=>c.id===id),j=i+d;[p.ch[i],p.ch[j]]=[p.ch[j],p.ch[i]];save();plano()};
+if(t.pu)mv(t.pu,-1);if(t.pd)mv(t.pd,1);
+if(t.px){if(b.dataset.arm!=='1'){b.dataset.arm='1';b.textContent='Confirmar remoção';return}p.ch=p.ch.filter(c=>c.id!==t.px);if(!p.ch.length)p.ch.push({id:uid(),t:'Capítulo 1',draft:'',final:''});save();plano()}
+if(t.prp){const[a,c]=t.prp.split('|'),q=pl(g(a));q.pp=q.pp.filter(x=>x!==c);save();plano()}}}
+/* linha do tempo */
+let tf='';
+function evs(e){const p=P(),l=(p.tl||[]).filter(v=>v.pp.includes(e.id)).sort((a,b)=>a.y-b.y);return l.length?`<div class="sec"><div class="h"><h3>Linha do tempo</h3></div><ul>${l.map(v=>`<li><b>${v.y} ${esc(p.era||'DA')}</b>: ${esc(v.t)}</li>`).join('')}</ul></div>`:''}
+function linha(){const p=P();p.era=p.era||'DA';
+if(!p.tl){const f=p.es.find(x=>x.name==='Lyra Valdor');p.tl=p.name==='Crônicas de Valdor'?[{id:uid(),y:82,d:'',t:'Nasce Lyra Valdor',x:'Primeira filha de Aldric e Maren.',ch:'',pp:f?[f.id]:[]},{id:uid(),y:100,d:'Amanhecer',t:'Lyra volta a Valdor',x:'',ch:p.ch[0]?p.ch[0].id:'',pp:f?[f.id]:[]}]:[]}
+const g=id=>p.tl.find(e=>e.id===id),ev=p.tl.filter(e=>!tf||e.pp.includes(tf)).sort((a,b)=>a.y-b.y);
+$('#m').innerHTML=`<div class="row" style="align-items:center;justify-content:space-between"><h2>Linha do tempo</h2><label class="small">Era do calendário <input type="text" id="era" value="${esc(p.era)}" style="width:70px"></label></div>
+<div class="card"><div class="row" style="align-items:flex-end;gap:.6rem"><label class="small">Ano<br><input type="number" id="ty" style="width:90px"></label><label class="small" style="flex:1;min-width:180px">Evento<br><input type="text" id="tt" style="width:100%" placeholder="O que aconteceu?"></label><button class="btn" id="ta">Adicionar evento</button><button class="btn g" id="ti">Importar nascimentos das fichas</button></div></div>
+<p class="small">Filtrar por ficha: <select id="tfl"><option value="">Todas</option>${p.es.map(x=>`<option value="${x.id}" ${x.id===tf?'selected':''}>${esc(x.name)}</option>`).join('')}</select></p>
+<div style="border-left:3px solid var(--accent);margin-left:.6rem;padding-left:1.2rem">${ev.length?ev.map(e=>`<div class="card" style="margin:.8rem 0;position:relative"><span style="position:absolute;left:-1.85rem;top:1rem;width:14px;height:14px;border-radius:50%;background:var(--accent)"></span>
+<div class="row" style="gap:.5rem;align-items:center"><b style="font-family:var(--fh);font-size:1.2rem"><input type="number" data-ty="${e.id}" value="${e.y}" style="width:84px" aria-label="Ano"> ${esc(p.era)}</b><input type="text" data-td="${e.id}" value="${esc(e.d)}" placeholder="Momento (opcional)" style="width:160px"><input type="text" data-tt="${e.id}" value="${esc(e.t)}" aria-label="Título" style="flex:1;min-width:160px;font-weight:600"><button class="btn g" data-tdel="${e.id}" style="color:var(--bad)">Excluir</button></div>
+<textarea data-tx="${e.id}" rows="2" style="width:100%;min-height:60px;margin:.5rem 0" placeholder="Descrição do evento">${esc(e.x)}</textarea>
+<div class="row" style="gap:.8rem;align-items:center"><label class="small">Capítulo <select data-tc="${e.id}"><option value="">Nenhum</option>${p.ch.map((c,i)=>`<option value="${c.id}" ${c.id===e.ch?'selected':''}>${i+1}. ${esc(c.t)}</option>`).join('')}</select></label>${e.ch&&p.ch.some(c=>c.id===e.ch)?`<a class="lnk" data-ch="${e.ch}">abrir capítulo</a>`:''}<label class="small">Envolvidos <select data-tp="${e.id}"><option value="">Adicionar…</option>${p.es.filter(x=>!e.pp.includes(x.id)).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></label></div>
+<p style="margin:.4rem 0 0">${e.pp.map(id=>{const f=p.es.find(x=>x.id===id);return f?`<span class="tag"><a class="lnk" data-go="${f.id}">${esc(f.name)}</a> <button data-trp="${e.id}|${id}" title="Remover" style="background:none;border:0;color:var(--bad);cursor:pointer">×</button></span> `:''}).join('')}</p></div>`).join(''):'<p class="small">Nenhum evento por aqui ainda.</p>'}</div>`;
+$('#era').oninput=e=>{p.era=e.target.value;save()};$('#era').onchange=linha;
+$('#tfl').onchange=e=>{tf=e.target.value;linha()};
+$('#ta').onclick=()=>{const t=$('#tt').value.trim();if(!t)return $('#tt').focus();p.tl.push({id:uid(),y:+$('#ty').value||0,d:'',t,x:'',ch:'',pp:tf?[tf]:[]});save();linha()};
+$('#ti').onclick=()=>{p.es.filter(x=>x.cat==='Personagens').forEach(x=>{const f=x.f.find(r=>/nasc/i.test(r[0])),m=f&&String(f[1]).match(/-?\d+/),t='Nasce '+x.name;if(m&&!p.tl.some(e=>e.t===t))p.tl.push({id:uid(),y:+m[0],d:'',t,x:'',ch:'',pp:[x.id]})});save();linha()};
+$('#m').oninput=e=>{if(tab!=='linha')return;const t=e.target.dataset,v=e.target.value;if(t.ty)g(t.ty).y=+v||0;if(t.td)g(t.td).d=v;if(t.tt)g(t.tt).t=v;if(t.tx)g(t.tx).x=v;if(t.ty||t.td||t.tt||t.tx)save()};
+$('#m').onchange=e=>{if(tab!=='linha')return;const t=e.target.dataset,v=e.target.value;if(t.ty)linha();if(t.tc){g(t.tc).ch=v;save();linha()}if(t.tp&&v){g(t.tp).pp.push(v);save();linha()}};
+$('#m').onclick=e=>{if(tab!=='linha')return;const b=e.target.closest('button');if(!b)return;const t=b.dataset;if(t.tdel&&confirm('Excluir este evento?')){p.tl=p.tl.filter(x=>x.id!==t.tdel);save();linha()}if(t.trp){const[a,c]=t.trp.split('|');g(a).pp=g(a).pp.filter(x=>x!==c);save();linha()}}}
+/* quadro de resumo */
+function resumo(){const p=P();p.goal=p.goal||50000;p.syn=p.syn||'';
+const st=c=>words(c.final)?'Oficial':words(c.draft)?'Rascunho':'Planejado',tot=p.ch.reduce((a,c)=>a+words(c.final),0),pc=Math.min(100,Math.round(tot/p.goal*100)),big=n=>`<b style="font-size:1.7rem;font-family:var(--fh)">${n}</b><br>`;
+$('#m').innerHTML=`<h2>Quadro de resumo</h2>
+<div class="card"><label class="small">Sinopse da história<br><textarea id="sy" rows="4" style="width:100%;min-height:90px" placeholder="Em poucas linhas: sobre o que é esta história?">${esc(p.syn)}</textarea></label></div>
+<div class="proj"><div class="card">${big(p.ch.length)}<span class="small">capítulos</span></div><div class="card">${big(tot)}<span class="small">palavras nos capítulos oficiais</span></div><div class="card">${big(p.es.length)}<span class="small">fichas</span></div><div class="card">${big((p.trees||[]).length)}<span class="small">árvores</span></div></div>
+<div class="card"><label class="small">Meta da história, em palavras <input type="number" id="gl" value="${p.goal}" style="width:110px;font:inherit"></label> <span class="small">${tot} de ${p.goal} (${pc}%)</span><div style="height:8px;background:var(--line);border-radius:4px;margin-top:.5rem;overflow:hidden"><i style="display:block;height:100%;width:${pc}%;background:var(--accent)"></i></div></div>
+<h3 style="margin-top:1.5rem">Quadro de Capítulos</h3><div class="row" style="gap:1rem;align-items:stretch">${[['Planejado','◌'],['Rascunho','◑'],['Oficial','●']].map(([k,ic])=>{const l=p.ch.filter(c=>st(c)===k);return `<div class="grow" style="background:color-mix(in srgb,var(--panel) 55%,var(--bg));border:1px solid var(--line);border-radius:18px;padding:.9rem"><div style="display:flex;align-items:center;gap:.45rem;margin-bottom:.75rem;padding:0 .2rem"><span style="color:var(--accent)">${ic}</span><b>${k}</b> <span class="small">${l.length}</span></div>${l.map(c=>`<div class="card" style="margin:.6rem 0;padding:1rem"><a class="lnk" style="font-weight:600;color:var(--ink);font-size:.95rem" data-ch="${c.id}" data-v="${k==='Rascunho'?'draft':'final'}">${p.ch.indexOf(c)+1}. ${esc(c.t)}</a><textarea data-sm="${c.id}" rows="2" style="width:100%;margin:.5rem 0;font-size:.83rem;border:0;background:var(--bg)" placeholder="Adicionar notas ou resumo do capítulo…">${esc(c.sum||'')}</textarea><div style="display:flex;justify-content:space-between;align-items:center"><span class="tag">${words(c.final)||words(c.draft)} palavras</span><span class="small">${k}</span></div></div>`).join('')||'<p class="small" style="padding:.4rem .2rem">Nenhum capítulo nesta coluna.</p>'}</div>`}).join('')}</div>
+<h3 style="margin-top:1.2rem">Fichas por categoria</h3><p class="small">${Object.keys(CATS).map(k=>`${k}: ${p.es.filter(x=>x.cat===k).length}`).join(' · ')}</p>
+<h3 style="margin-top:1.4rem">Zona de perigo</h3><div class="card" id="dz"><button class="btn g" id="dp" style="color:var(--bad)">Excluir este projeto</button></div>`;
+$('#dp').onclick=()=>{$('#dz').innerHTML=`<p>Excluir <b>${esc(p.name)}</b> com todos os capítulos, fichas, árvores e eventos? Isso não pode ser desfeito.</p><button class="btn" id="dy" style="background:var(--bad)">Sim, excluir tudo</button> <button class="btn g" id="dn">Cancelar</button>`;$('#dy').onclick=()=>{S.ps=S.ps.filter(x=>x!==p);pid=null;tab='escrita';save();render()};$('#dn').onclick=resumo};
+$('#sy').oninput=e=>{p.syn=e.target.value;save()};
+$('#gl').oninput=e=>{p.goal=+e.target.value||1;save()};$('#gl').onchange=resumo;
+$('#m').oninput=e=>{if(e.target.dataset.sm){p.ch.find(c=>c.id===e.target.dataset.sm).sum=e.target.value;save()}}}
+/* árvores genealógicas */
+let tid=null,ns=null;
+function demo(p){const f=p.es.find(x=>x.name==='Lyra Valdor');return{id:uid(),name:'Casa Valdor',bc:'',bgi:'',n:[{id:'a',x:380,y:90,name:'Aldric'},{id:'m',x:600,y:90,name:'Maren'},{id:'l',x:300,y:270,name:'Lyra Valdor',e:f?f.id:''},{id:'d',x:680,y:270,name:'Doran'},{id:'c',x:100,y:270,name:'Cael'}].map(n=>({img:'',e:'',...n})),l:[{id:'1',a:'a',b:'m',t:'c'},{id:'2',a:'a',b:'l',t:'p'},{id:'3',a:'m',b:'l',t:'p'},{id:'4',a:'a',b:'d',t:'p'},{id:'5',a:'m',b:'d',t:'p'},{id:'6',a:'l',b:'c',t:'c'},{id:'7',a:'l',b:'d',t:'i'}]}}
+const desc=(t,l,n)=>{const o=t.n.find(x=>x.id===(l.a===n.id?l.b:l.a));return({c:'cônjuge',i:'irmão(ã)',o:'ligada'}[l.t]||(l.a===n.id?'pai/mãe de':'filho(a) de'))+': '+(o?o.name:'?')};
+function org(t){const g={};t.n.forEach(n=>g[n.id]=0);for(let k=0;k<8;k++)t.l.forEach(l=>{if(!g.hasOwnProperty(l.a)||!g.hasOwnProperty(l.b))return;if(l.t==='p')g[l.b]=Math.max(g[l.b],g[l.a]+1);if(l.t==='c')g[l.a]=g[l.b]=Math.max(g[l.a],g[l.b])});
+const r={};t.n.forEach(n=>(r[g[n.id]]=r[g[n.id]]||[]).push(n));Object.keys(r).forEach(k=>r[k].forEach((n,i,a)=>{n.x=500+(i-(a.length-1)/2)*170;n.y=80+k*130}))}
+function draw(t){const N=id=>t.n.find(x=>x.id===id);let s=t.bgi?`<image href="${t.bgi}" width="1000" height="620" preserveAspectRatio="xMidYMid slice"/>`:'';
+t.l.forEach(l=>{const a=N(l.a),b=N(l.b);if(!a||!b)return;const mx=(a.x+b.x)/2;
+if(l.t==='p')s+=`<path class="lk" d="M${a.x} ${a.y+32}V${(a.y+b.y)/2}H${b.x}V${b.y-32}"/>`;
+else if(l.t==='i')s+=`<path class="lk" d="M${a.x} ${a.y-32}Q${mx} ${Math.min(a.y,b.y)-75} ${b.x} ${b.y-32}"/>`;
+else s+=`<path class="lk" d="M${a.x} ${a.y}L${b.x} ${b.y}" ${l.t==='c'?'stroke-dasharray="6 4" style="stroke:var(--accent);stroke-width:2.5"':''}/>${l.t==='c'?`<text x="${mx}" y="${(a.y+b.y)/2-6}" text-anchor="middle" style="font-size:11px">cônjuge</text>`:''}`});
+t.n.forEach(n=>{s+=`<g class="nd ${n.id===ns?'on':''}" data-n="${n.id}" transform="translate(${n.x},${n.y})" style="cursor:grab"><rect x="-70" y="-32" width="140" height="64" rx="6"/><clipPath id="k${n.id}"><circle cx="-42" cy="0" r="22"/></clipPath>${n.img?`<image href="${n.img}" x="-64" y="-22" width="44" height="44" clip-path="url(#k${n.id})" preserveAspectRatio="xMidYMid slice"/>`:`<circle cx="-42" cy="0" r="22" style="fill:var(--bg)"/><text x="-42" y="5" text-anchor="middle" style="font-size:16px">${esc(n.name[0]||'?')}</text>`}<text x="-14" y="4">${esc(n.name.length>11?n.name.slice(0,10)+'…':n.name)}</text></g>`});
+$('#tw').innerHTML=s}
+function panel(t){const n=t.n.find(x=>x.id===ns),p=P();if(!n){$('#np').innerHTML='<p class="small">Clique numa pessoa para editar, ligar ou trocar a imagem. Arraste para mover.</p>';return}
+$('#np').innerHTML=`<div class="card"><div class="row" style="align-items:flex-end;gap:.6rem"><label class="small">Nome<br><input type="text" id="nn" value="${esc(n.name)}"></label><button class="btn g" id="ni">Imagem</button><label class="small">Ficha ligada<br><select id="ne"><option value="">Nenhuma</option>${p.es.filter(x=>x.cat==='Personagens').map(x=>`<option value="${x.id}" ${x.id===n.e?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><button class="btn g" id="nd" style="color:var(--bad)">Remover pessoa</button></div>
+<div class="row" style="align-items:flex-end;gap:.6rem;margin-top:.7rem"><label class="small">${esc(n.name)} é<br><select id="lt"><option value="c">Cônjuge de</option><option value="p">Pai/Mãe de</option><option value="i">Irmão/Irmã de</option><option value="o">Ligada a</option></select></label><label class="small">Pessoa<br><select id="lb">${t.n.filter(x=>x.id!==n.id).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></label><button class="btn" id="lk">Ligar</button></div>
+<p>${t.l.filter(l=>l.a===n.id||l.b===n.id).map(l=>`<span class="tag" style="margin-right:.3rem">${esc(desc(t,l,n))} <button data-ul="${l.id}" title="Remover ligação" style="background:none;border:0;color:var(--bad);cursor:pointer">×</button></span>`).join('')}</p></div>`}
+function arvore(){const p=P();p.trees=p.trees||[];const t=p.trees.find(x=>x.id===tid)||p.trees[0];tid=t&&t.id;
+$('#m').innerHTML=`<div class="row"><div class="side">${p.trees.map(x=>`<button data-t2="${x.id}" ${x.id===tid?'aria-current="true"':''}>${esc(x.name)}</button>`).join('')}<button id="at" style="color:var(--accent)">Nova árvore</button></div><div class="grow">${t?`
+<div class="row" style="align-items:flex-end;gap:.6rem;margin-bottom:.6rem"><label class="small">Nome da árvore<br><input type="text" id="tn" value="${esc(t.name)}"></label><label class="small">Fundo<br><input type="color" id="tc" value="${t.bc||'#f8f9f5'}" style="height:34px;width:48px;padding:0"></label><button class="btn g" id="tbg">Imagem de fundo</button><button class="btn g" id="tbx">Limpar fundo</button><button class="btn g" id="tor">Organizar</button><button class="btn g" id="tdel" style="color:var(--bad)">Excluir árvore</button></div>
+<div class="row" style="align-items:flex-end;gap:.6rem;margin-bottom:.6rem"><label class="small">Nova pessoa<br><input type="text" id="an" placeholder="Nome"></label><label class="small">ou ficha<br><select id="af2"><option value="">Escolher ficha</option>${p.es.filter(x=>x.cat==='Personagens').map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></label><button class="btn" id="ap2">Adicionar à árvore</button></div>
+<svg id="tw" viewBox="0 0 1000 620" width="100%" role="img" aria-label="Árvore ${esc(t.name)}"></svg><div id="np" style="margin-top:.6rem"></div><input type="file" id="fbg" accept="image/*" hidden><input type="file" id="fni" accept="image/*" hidden>`:'<p class="small">Crie uma árvore para cada família do seu mundo. Dá para ligar pessoas, colocar imagens e trocar o fundo.</p>'}</div></div>`;
+document.querySelector('.side').onclick=e=>{const b=e.target.closest('button');if(!b)return;ns=null;if(b.dataset.t2){tid=b.dataset.t2;arvore()}if(b.id==='at'){const x={id:uid(),name:'Nova família',bc:'',bgi:'',n:[],l:[]};p.trees.push(x);tid=x.id;save();arvore()}};
+if(!t)return;const s=$('#tw'),np=$('#np');let dg=null;s.style.background=t.bc||'var(--panel)';draw(t);panel(t);
+const pt=e=>{const q=s.createSVGPoint();q.x=e.clientX;q.y=e.clientY;return q.matrixTransform(s.getScreenCTM().inverse())};
+s.onpointerdown=e=>{const g=e.target.closest('.nd');if(!g){if(ns){ns=null;draw(t);panel(t)}return}ns=g.dataset.n;dg=t.n.find(x=>x.id===ns);s.setPointerCapture(e.pointerId);draw(t);panel(t)};
+s.onpointermove=e=>{if(!dg)return;const q=pt(e);dg.x=Math.round(Math.max(70,Math.min(930,q.x)));dg.y=Math.round(Math.max(40,Math.min(580,q.y)));draw(t)};
+s.onpointerup=()=>{if(dg){dg=null;save()}};
+$('#tn').oninput=e=>{t.name=e.target.value;save()};$('#tn').onchange=arvore;
+$('#tc').oninput=e=>{t.bc=e.target.value;s.style.background=t.bc;save()};
+$('#tbg').onclick=()=>$('#fbg').click();$('#fbg').onchange=async e=>{const f=e.target.files[0];if(f){t.bgi=await shrink(f);save();draw(t)}};
+$('#tbx').onclick=()=>{t.bgi='';t.bc='';save();arvore()};
+$('#tor').onclick=()=>{org(t);save();draw(t)};
+$('#tdel').onclick=()=>{if(confirm('Excluir esta árvore?')){p.trees=p.trees.filter(x=>x!==t);tid=null;save();arvore()}};
+$('#ap2').onclick=()=>{const f=p.es.find(x=>x.id===$('#af2').value),nm=f?f.name:$('#an').value.trim();if(!nm)return;const n={id:uid(),x:500,y:100+(t.n.length%4)*40,name:nm,img:f?f.img:'',e:f?f.id:''};t.n.push(n);ns=n.id;save();draw(t);panel(t);$('#an').value=''};
+$('#fni').onchange=async e=>{const f=e.target.files[0];e.target.value='';const n=t.n.find(x=>x.id===ns);if(f&&n){n.img=await shrink(f);save();draw(t)}};
+np.oninput=e=>{const n=t.n.find(x=>x.id===ns);if(n&&e.target.id==='nn'){n.name=e.target.value;save();draw(t)}};
+np.onchange=e=>{const n=t.n.find(x=>x.id===ns);if(n&&e.target.id==='ne'){n.e=e.target.value;const f=p.es.find(x=>x.id===n.e);if(f&&f.img&&!n.img)n.img=f.img;save();draw(t)}};
+np.onclick=e=>{const n=t.n.find(x=>x.id===ns),b=e.target.closest('button');if(!b||!n)return;
+if(b.id==='ni')$('#fni').click();
+if(b.id==='nd'){t.n=t.n.filter(x=>x!==n);t.l=t.l.filter(l=>l.a!==n.id&&l.b!==n.id);ns=null}
+if(b.id==='lk'&&$('#lb').value)t.l.push({id:uid(),a:n.id,b:$('#lb').value,t:$('#lt').value});
+if(['nd','lk'].includes(b.id)||b.dataset.ul){if(b.dataset.ul)t.l=t.l.filter(l=>l.id!==b.dataset.ul);save();draw(t);panel(t)}}}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-ch]'),s=e.target.closest('[data-sc]');if(a){cid=a.dataset.ch;ver=a.dataset.v||'final';tab='escrita';render()}if(s){const el=$('#s-'+s.dataset.sc);if(el)el.scrollIntoView({behavior:'smooth'})}});
+S.ps.forEach(p=>{p.trees=p.trees||(p.name==='Crônicas de Valdor'&&p.es.length?[demo(p)]:[])});
+render();
+</script>
+</body>
+</html>
